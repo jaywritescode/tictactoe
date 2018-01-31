@@ -6,7 +6,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -15,8 +14,9 @@ public class Board {
 
     public final int SIZE;
 
-    final List<Piece> squares;
-    final Stream<List<Pair<Integer, Integer>>> lines;
+    final Piece[] pieces;
+    final List<List<Integer>> lines;
+    final Map<List<Piece>, Piece> winners;
 
     public Board() {
         this(3);
@@ -24,93 +24,95 @@ public class Board {
 
     public Board(int size) {
         this.SIZE = size;
-        squares = new ArrayList<Piece>(Arrays.asList(new Piece[SIZE * SIZE]));
+        pieces = new Piece[SIZE * SIZE];
+
+        Function<Integer, List<Integer>> eachRow = (row) -> IntStream.range(0, SIZE).boxed()
+                .map(i -> SIZE * row + i)
+                .collect(Collectors.toList());
+        Function<Integer, List<Integer>> eachCol = (col) -> IntStream.range(0, SIZE).boxed()
+                .map(i -> col + SIZE * i)
+                .collect(Collectors.toList());
+        Function<Piece, List<Piece>> listOfPieces = (piece) -> IntStream.range(0, SIZE).boxed()
+                .map(i -> piece)
+                .collect(Collectors.toList());
+
 
         lines = Stream.of(
-                IntStream.range(0, SIZE).mapToObj(row -> IntStream.range(0, SIZE).mapToObj(i -> Pair.of(row, i)).collect(Collectors.toList())),
-                IntStream.range(0, SIZE).mapToObj(col -> IntStream.range(0, SIZE).mapToObj(i -> Pair.of(i, col)).collect(Collectors.toList())),
-                Stream.of(IntStream.range(0, SIZE).mapToObj(i -> Pair.of(i, i)).collect(Collectors.toList())),
-                Stream.of(IntStream.range(0, SIZE).mapToObj(i -> Pair.of(SIZE - i, i)).collect(Collectors.toList())))
-                .flatMap(Function.identity());
+                IntStream.range(0, SIZE).boxed().map(eachRow),
+                IntStream.range(0, SIZE).boxed().map(eachCol),
+                Stream.of(IntStream.range(0, SIZE).boxed()
+                        .map(i -> SIZE * i + i)
+                        .collect(Collectors.toList())),
+                Stream.of(IntStream.range(0, SIZE).boxed()
+                        .map(i -> SIZE * i + (SIZE - i - 1))
+                        .collect(Collectors.toList())))
+                .flatMap(Function.identity())
+                .collect(Collectors.toList());
+
+        winners = Stream.of(Piece.X, Piece.O)
+                .collect(Collectors.toMap(listOfPieces, Function.identity()));
     }
 
     public Piece getPiece(Pair<Integer, Integer> square) {
-        return squares.get(square.getLeft() * SIZE + square.getRight());
+        return getPiece(index(square));
+    }
+
+    public Piece getPiece(int index) {
+        return pieces[index];
     }
 
     public void setPiece(Pair<Integer, Integer> square, Piece piece) {
-        int index = square.getLeft() * SIZE + square.getRight();
-
-        Validate.isTrue(Objects.isNull(squares.get(index)));
-
-        squares.set(index, piece);
+        setPiece(index(square), piece);
     }
 
-    /**
-     * Determines the game's outcome, if the game is over.
-     *
-     * @return the {@code Outcome} if the game is over, or {@code null} otherwise.
-     */
-    public Outcome winner() {
+    public void setPiece(int index, Piece piece) {
+        Validate.notNull(piece);
+        Validate.isTrue(Objects.isNull(getPiece(index)));
 
+        pieces[index] = piece;
+    }
 
+    public Optional<Outcome> getOutcome() {
+        List<List<Piece>> pieceLines = lines.stream()
+                .map(indices -> indices.stream()
+                        .map(index -> pieces[index])
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
 
-        lines.map(this::getPiece).map(Board::allSame).filter(Objects::nonNull).findFirst();
+        Optional<Piece> winningPiece = pieceLines.stream()
+                .filter(winners::containsKey)
+                .findAny()
+                .map(winners::get);
 
-        if (squares.stream().allMatch(Objects::nonNull)) {
-            return Outcome.tie();
+        Optional<Outcome> outcome = winningPiece.map(Outcome::new);
+
+        if (!outcome.isPresent() && Arrays.asList(pieces).stream().allMatch(Objects::nonNull)) {
+            outcome = Optional.of(Outcome.tie());
         }
 
-        return null;
+        return outcome;
     }
 
-    private Piece foo(List<Pair<Integer, Integer>> r) {
-        List<Piece> pieces = r.stream().map(this::getPiece).collect(Collectors.toList());
-
-        return Board.allSame(pieces);
+    private int index(Pair<Integer, Integer> square) {
+        return square.getLeft() * SIZE + square.getRight();
     }
 
-    private boolean full() {
-        return squares.stream().allMatch(Objects::nonNull);
-    }
-
-    private static Piece allSame(List<Piece> pieces) {
-        Piece first = null;
-
-        for (Piece piece : pieces) {
-            if (Objects.isNull(piece)) {
-                return null;
-            }
-
-            if (first == null) {
-                first = piece;
-            }
-            else if (piece != first) {
-                return null;
-            }
-        }
-        return first;
-    }
-
-    private static Piece allSame(Stream<Piece> pieces) {
-        Piece identity = pieces.findFirst().get();
-
-
-    }
 
     public String pretty() {
         String d = String.format("\n%s\n", IntStream.range(0, SIZE).mapToObj(i -> "-").collect(Collectors.joining("+")));
 
-        return IntStream.range(0, SIZE).mapToObj(row -> IntStream.range(row * SIZE, (row + 1) * SIZE).mapToObj(index -> {
-            Piece p = squares.get(index);
-            return p.map(Piece::toString).orElse(StringUtils.SPACE);
-        }).collect(Collectors.joining("|"))).collect(Collectors.joining(d));
+        return IntStream.range(0, SIZE)
+                .mapToObj(row -> IntStream.range(row * SIZE, (row + 1) * SIZE)
+                        .mapToObj(index -> Optional.ofNullable(pieces[index]).map(Piece::toString).orElse(StringUtils.SPACE))
+                        .collect(Collectors.joining("|")))
+                .collect(Collectors.joining(d));
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Board{");
-        sb.append("squares=").append(squares == null ? "null" : Arrays.asList(squares).toString());
+        sb.append("SIZE=").append(SIZE);
+        sb.append(", pieces=").append(pieces == null ? "null" : Arrays.asList(pieces).toString());
         sb.append('}');
         return sb.toString();
     }
@@ -118,10 +120,9 @@ public class Board {
     public static void main(String... args) {
         Board b = new Board();
 
-        b.setPiece(Pair.of(0,1), Piece.X);
-        b.setPiece(Pair.of(1,2), Piece.O);
-
-        System.out.println(b);
+        b.setPiece(Pair.of(0, 1), Piece.X);
+        b.setPiece(Pair.of(1, 2), Piece.O);
         System.out.println(b.pretty());
+
     }
 }
