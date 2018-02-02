@@ -1,27 +1,44 @@
 package info.jayharris.tictactoe;
 
-import org.apache.commons.lang3.tuple.Pair;
+import info.jayharris.tictactoe.player.Player;
+import info.jayharris.tictactoe.player.TerminalPlayer;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 public class Tictactoe {
 
-    Player current, x, o;
-    final Board board = new Board();
+    private final Player x, o;
+    private Player current;
+    private final Board board;
+    private int ply;
 
     public Tictactoe(Player x, Player o) {
-        current = this.x = x;
+        this.board = new Board();
+        this.current = this.x = x;
         this.o = o;
+
+        this.ply = 0;
     }
 
     public Outcome play() {
-        Outcome winner;
-        while ((winner = nextPly()) == null) {
+        Optional<Outcome> winner;
+        while (!(winner = nextPly()).isPresent()) {
             current = (current == x ? o : x);
         }
 
-        return winner;
+        return winner.get();
+    }
+
+    public int getPly() {
+        return ply;
+    }
+
+    public int getSize() {
+        return board.SIZE;
+    }
+
+    public String pretty() {
+        return board.pretty();
     }
 
     /**
@@ -29,18 +46,25 @@ public class Tictactoe {
      *
      * @return the outcome if the game is over, otherwise null
      */
-    private Outcome nextPly() {
+    private Optional<Outcome> nextPly() {
+        ++ply;
+        current.begin(this);
+
         while(true) {
             try {
-                board.setPiece(current.getMove(), current.piece);
+                board.setPiece(current.getMove(this), current.piece);
             }
-            catch (IllegalArgumentException e) { }
+            catch (IllegalArgumentException e) {
+                current.fail(this, e);
+            }
+
+            return board.getOutcome();
         }
     }
 
-    private Outcome gameOver() {
-       return null;
+    public static void main(String... args) {
+        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new TerminalPlayer(Piece.O));
+
+        game.play();
     }
-
-
 }
