@@ -24,7 +24,7 @@ public class TerminalPlayer extends Player {
     final PrintStream out;
 
     final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
-    final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play",
+    final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: ",
             ILLEGAL_MOVE_MSG = "Illegal move!",
             INVALID_MSG_TPL = "%s is invalid algebraic notation. Try again: ";
 
