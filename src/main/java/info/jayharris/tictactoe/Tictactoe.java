@@ -53,6 +53,7 @@ public class Tictactoe {
         while(true) {
             try {
                 board.setPiece(current.getMove(this), current.piece);
+                current.end(this);
             }
             catch (IllegalArgumentException e) {
                 current.fail(this, e);
