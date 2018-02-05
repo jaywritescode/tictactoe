@@ -23,6 +23,14 @@ public class Outcome {
         return new Outcome(null);
     }
 
+    public boolean isTie() {
+        return !outcome.isPresent();
+    }
+
+    public Piece winner() {
+        return outcome.get();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
