@@ -66,6 +66,14 @@ public class Tictactoe {
     public static void main(String... args) {
         Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new TerminalPlayer(Piece.O));
 
-        game.play();
+        Outcome outcome = game.play();
+
+        System.out.println(game.pretty());
+        if (outcome.isTie()) {
+            System.out.println("It's a tie!");
+        }
+        else {
+            System.out.println(String.format("%s wins!", outcome.winner()));
+        }
     }
 }
