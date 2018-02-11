@@ -15,6 +15,8 @@ public class Board {
     public final int SIZE;
 
     final Piece[] pieces;
+
+    // TODO: make immutable
     final List<List<Integer>> lines;
     final Map<List<Piece>, Piece> winners;
 
@@ -51,6 +53,13 @@ public class Board {
 
         winners = Stream.of(Piece.X, Piece.O)
                 .collect(Collectors.toMap(listOfPieces, Function.identity()));
+    }
+
+    public Board(Board board) {
+        this.SIZE = board.SIZE;
+        this.pieces = Arrays.copyOf(board.pieces, SIZE * SIZE);
+        this.lines = board.lines;
+        this.winners = board.winners;
     }
 
     public Piece getPiece(Pair<Integer, Integer> square) {
@@ -106,6 +115,19 @@ public class Board {
                         .mapToObj(index -> Optional.ofNullable(pieces[index]).map(Piece::toString).orElse(StringUtils.SPACE))
                         .collect(Collectors.joining("|")))
                 .collect(Collectors.joining(d));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return Arrays.equals(pieces, board.pieces);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(pieces);
     }
 
     @Override
