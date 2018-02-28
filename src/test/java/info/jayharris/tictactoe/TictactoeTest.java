@@ -2,11 +2,9 @@ package info.jayharris.tictactoe;
 
 import info.jayharris.tictactoe.player.Player;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -16,14 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 class TictactoeTest {
-
-    private static Field boardField;
-
-    @BeforeAll
-    static void setUp() throws Exception {
-        boardField = Tictactoe.class.getDeclaredField("board");
-        boardField.setAccessible(true);
-    }
 
     @Test
     @DisplayName("run the entire game")
