@@ -8,11 +8,13 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
-    compile group: 'org.apache.commons', name: 'collections', version: '4.1'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'com.github.jaywritescode', name: 'minimax', version: '-SNAPSHOT'
 
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.9.0'
