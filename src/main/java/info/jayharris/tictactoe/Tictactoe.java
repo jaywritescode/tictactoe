@@ -42,6 +42,14 @@ public class Tictactoe {
     }
 
     /**
+     *
+     * @return a copy of the board
+     */
+    public Board getBoard() {
+        return new Board(this.board);
+    }
+
+    /**
      * Plays the next ply of the game.
      *
      * @return the outcome if the game is over, otherwise null

@@ -62,10 +62,6 @@ public class Board {
         this.winners = board.winners;
     }
 
-    public Piece getPiece(Pair<Integer, Integer> square) {
-        return getPiece(index(square));
-    }
-
     public Piece getPiece(int index) {
         return pieces[index];
     }
@@ -78,7 +74,7 @@ public class Board {
     @Deprecated
     public void setPiece(int index, Piece piece) {
         Validate.notNull(piece);
-        Validate.isTrue(Objects.isNull(getPiece(index)));
+        Validate.isTrue(!isOccupied(index));
 
         pieces[index] = piece;
     }
@@ -87,9 +83,13 @@ public class Board {
         Validate.notNull(piece);
 
         int index;
-        Validate.isTrue(Objects.isNull(getPiece(index = move.getIndex())));
+        Validate.isTrue(!isOccupied(index = move.getIndex()));
 
         pieces[index] = piece;
+    }
+
+    public boolean isOccupied(int index) {
+        return Objects.nonNull(getPiece(index));
     }
 
     public Optional<Outcome> getOutcome() {
