@@ -1,5 +1,6 @@
 package info.jayharris.tictactoe.player;
 
+import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +40,7 @@ public class TerminalPlayer extends Player {
     }
 
     @Override
-    public Pair<Integer, Integer> getMove(Tictactoe game) {
+    public Move getMove(Tictactoe game) {
         out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), piece.toString()));
 
         String line;
@@ -52,7 +53,7 @@ public class TerminalPlayer extends Player {
                             .collect(Collectors.toList());
 
                     if (coords.stream().allMatch(i -> i < game.getSize())) {
-                        return Pair.of(coords.get(0), coords.get(1));
+                        return new Move(game, Pair.of(coords.get(0), coords.get(1)));
                     }
                 }
 

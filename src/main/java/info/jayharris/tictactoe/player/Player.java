@@ -1,8 +1,8 @@
 package info.jayharris.tictactoe.player;
 
+import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
-import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class Player {
 
@@ -12,7 +12,7 @@ public abstract class Player {
         this.piece = piece;
     }
 
-    public abstract Pair<Integer, Integer> getMove(Tictactoe game);
+    public abstract Move getMove(Tictactoe game);
 
     public void begin(Tictactoe game) { }
 

@@ -70,13 +70,24 @@ public class Board {
         return pieces[index];
     }
 
+    @Deprecated
     public void setPiece(Pair<Integer, Integer> square, Piece piece) {
         setPiece(index(square), piece);
     }
 
+    @Deprecated
     public void setPiece(int index, Piece piece) {
         Validate.notNull(piece);
         Validate.isTrue(Objects.isNull(getPiece(index)));
+
+        pieces[index] = piece;
+    }
+
+    public void setPiece(Move move, Piece piece) {
+        Validate.notNull(piece);
+
+        int index;
+        Validate.isTrue(Objects.isNull(getPiece(index = move.getIndex())));
 
         pieces[index] = piece;
     }
@@ -102,10 +113,9 @@ public class Board {
         return outcome;
     }
 
-    private int index(Pair<Integer, Integer> square) {
+    public int index(Pair<Integer, Integer> square) {
         return square.getLeft() * SIZE + square.getRight();
     }
-
 
     public String pretty() {
         String d = String.format("\n%s\n", IntStream.range(0, SIZE).mapToObj(i -> "-").collect(Collectors.joining("+")));
