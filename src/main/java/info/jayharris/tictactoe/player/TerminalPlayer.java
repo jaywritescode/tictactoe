@@ -5,10 +5,7 @@ import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,7 +18,7 @@ public class TerminalPlayer extends Player {
     };
     MoveState state = MoveState.IDLE;
 
-    BufferedReader reader;
+    final BufferedReader reader;
     final PrintStream out;
 
     final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
@@ -34,9 +31,13 @@ public class TerminalPlayer extends Player {
     }
 
     public TerminalPlayer(Piece piece, PrintStream out) {
+        this(piece, new BufferedReader(new InputStreamReader(System.in)), out);
+    }
+
+    public TerminalPlayer(Piece piece, BufferedReader reader, PrintStream out) {
         super(piece);
+        this.reader = reader;
         this.out = out;
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
