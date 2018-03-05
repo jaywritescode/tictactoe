@@ -9,26 +9,38 @@ public class Move {
 
     private final int index;
 
-    /**
-     * Constructor.
-     *
-     * @param index the index into the underlying array
-     */
-    public Move(int index) {
+    private Move(int index) {
         this.index = index;
     }
 
-    /**
-     * Constructor.
-     *
-     * @param game the game
-     * @param coords a (row, column) pair
-     */
-    public Move(Tictactoe game, Pair<Integer, Integer> coords) {
-        this.index = coords.getLeft() * game.getSize() + coords.getRight();
+    private Move(SquareGrid grid, Pair<Integer, Integer> coords) {
+        this.index = coords.getLeft() * grid.getSize() + coords.getRight();
     }
 
     public int getIndex() {
         return index;
+    }
+
+    /**
+     * Create a new Move.
+     *
+     * @param index the index we're playing at. The upper-left square is index 0, and
+     *              indices are counted going right and then down.
+     * @return a Move at the given index
+     */
+    public static Move at(int index) {
+        return new Move(index);
+    }
+
+    /**
+     * Create a new Move.
+     *
+     * @param grid the game or board
+     * @param coords the move coordinates as {@code Pair.of(row, column)}. The leftmost
+     *               column and the topmost row are zero.
+     * @return a Move at the given coordinates
+     */
+    public static Move at(SquareGrid grid, Pair<Integer, Integer> coords) {
+        return new Move(grid, coords);
     }
 }

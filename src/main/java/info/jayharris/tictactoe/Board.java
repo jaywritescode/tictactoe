@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Board {
+public class Board implements SquareGrid {
 
-    public final int SIZE;
+    private final int SIZE;
 
     final Piece[] pieces;
 
@@ -113,15 +113,19 @@ public class Board {
         return outcome;
     }
 
+    public int getSize() {
+        return SIZE;
+    }
+
     public int index(Pair<Integer, Integer> square) {
-        return square.getLeft() * SIZE + square.getRight();
+        return square.getLeft() * getSize() + square.getRight();
     }
 
     public String pretty() {
-        String d = String.format("\n%s\n", IntStream.range(0, SIZE).mapToObj(i -> "-").collect(Collectors.joining("+")));
+        String d = String.format("\n%s\n", IntStream.range(0, getSize()).mapToObj(i -> "-").collect(Collectors.joining("+")));
 
-        return IntStream.range(0, SIZE)
-                .mapToObj(row -> IntStream.range(row * SIZE, (row + 1) * SIZE)
+        return IntStream.range(0, getSize())
+                .mapToObj(row -> IntStream.range(row * getSize(), (row + 1) * getSize())
                         .mapToObj(index -> Optional.ofNullable(pieces[index]).map(Piece::toString).orElse(StringUtils.SPACE))
                         .collect(Collectors.joining("|")))
                 .collect(Collectors.joining(d));
@@ -152,8 +156,8 @@ public class Board {
     public static void main(String... args) {
         Board b = new Board();
 
-        b.setPiece(Pair.of(0, 1), Piece.X);
-        b.setPiece(Pair.of(1, 2), Piece.O);
+        b.setPiece(Move.at(b, Pair.of(0, 1)), Piece.X);
+        b.setPiece(Move.at(b, Pair.of(1, 2)), Piece.O);
         System.out.println(b.pretty());
 
     }
