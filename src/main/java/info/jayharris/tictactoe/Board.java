@@ -70,19 +70,6 @@ public class Board implements SquareGrid {
         return pieces[index];
     }
 
-    @Deprecated
-    public void setPiece(Pair<Integer, Integer> square, Piece piece) {
-        setPiece(index(square), piece);
-    }
-
-    @Deprecated
-    public void setPiece(int index, Piece piece) {
-        Validate.notNull(piece);
-        Validate.isTrue(Objects.isNull(getPiece(index)));
-
-        pieces[index] = piece;
-    }
-
     public void setPiece(Move move, Piece piece) {
         Validate.notNull(piece);
 
@@ -115,10 +102,6 @@ public class Board implements SquareGrid {
 
     public int getSize() {
         return SIZE;
-    }
-
-    public int index(Pair<Integer, Integer> square) {
-        return square.getLeft() * getSize() + square.getRight();
     }
 
     public String pretty() {
