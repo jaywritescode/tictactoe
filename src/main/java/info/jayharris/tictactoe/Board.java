@@ -135,13 +135,4 @@ public class Board implements SquareGrid {
         sb.append('}');
         return sb.toString();
     }
-
-    public static void main(String... args) {
-        Board b = new Board();
-
-        b.setPiece(Move.at(b, Pair.of(0, 1)), Piece.X);
-        b.setPiece(Move.at(b, Pair.of(1, 2)), Piece.O);
-        System.out.println(b.pretty());
-
-    }
 }
