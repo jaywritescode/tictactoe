@@ -5,7 +5,7 @@ import info.jayharris.tictactoe.player.TerminalPlayer;
 
 import java.util.Optional;
 
-public class Tictactoe {
+public class Tictactoe implements SquareGrid {
 
     private final Player x, o;
     private Player current;
@@ -34,7 +34,7 @@ public class Tictactoe {
     }
 
     public int getSize() {
-        return board.SIZE;
+        return board.getSize();
     }
 
     public String pretty() {

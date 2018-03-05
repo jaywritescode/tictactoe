@@ -16,7 +16,7 @@ public class BoardCreator {
 
         IntStream.range(0, size)
                 .filter(it -> pieces[it] != null)
-                .forEach(it -> board.setPiece(it, pieces[it]));
+                .forEach(it -> board.setPiece(Move.at(it), pieces[it]));
         return board;
     }
 }
