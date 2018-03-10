@@ -6,6 +6,7 @@ import info.jayharris.tictactoe.Board;
 import info.jayharris.tictactoe.Piece;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -50,5 +51,17 @@ public class MinimaxState implements State<MinimaxState> {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MinimaxState that = (MinimaxState) o;
+        return Objects.equals(board, that.board) &&
+               toMove == that.toMove;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, toMove);
+    }
 }
