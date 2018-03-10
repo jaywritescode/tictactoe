@@ -3,10 +3,12 @@ package info.jayharris.tictactoe.minimax;
 import info.jayharris.minimax.State;
 import info.jayharris.minimax.Utility;
 import info.jayharris.tictactoe.Board;
+import info.jayharris.tictactoe.Outcome;
 import info.jayharris.tictactoe.Piece;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,13 +27,16 @@ public class MinimaxState implements State<MinimaxState> {
         this.isOccupied = board::isOccupied;
     }
 
-    // TODO: return a copy of the board, not the original
-    public Board getBoard() {
-        return board;
+    public Board getBoardCopy() {
+        return new Board(board);
     }
 
     public Piece getToMove() {
         return toMove;
+    }
+
+    public Optional<Outcome> getOutcome() {
+        return board.getOutcome();
     }
 
     @Override
@@ -44,7 +49,7 @@ public class MinimaxState implements State<MinimaxState> {
 
     @Override
     public boolean terminalTest() {
-        return board.getOutcome().isPresent();
+        return getOutcome().isPresent();
     }
 
     @Override

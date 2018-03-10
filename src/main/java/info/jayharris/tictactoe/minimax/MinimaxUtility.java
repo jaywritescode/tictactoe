@@ -26,7 +26,7 @@ public class MinimaxUtility implements Utility<Long> {
             return null;
         }
 
-        Outcome outcome = state.getBoard().getOutcome().get();
+        Outcome outcome = state.getOutcome().get();
 
         if (outcome == Outcome.tie()) {
             return 0L;
