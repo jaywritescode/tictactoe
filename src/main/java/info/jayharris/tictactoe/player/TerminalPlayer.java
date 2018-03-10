@@ -54,7 +54,7 @@ public class TerminalPlayer extends Player {
                             .collect(Collectors.toList());
 
                     if (coords.stream().allMatch(i -> i < game.getSize())) {
-                        return new Move(game, Pair.of(coords.get(0), coords.get(1)));
+                        return Move.at(game, Pair.of(coords.get(0), coords.get(1)));
                     }
                 }
 

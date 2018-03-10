@@ -41,7 +41,7 @@ class TerminalPlayerTest {
         @DisplayName("it gets a legal move")
         void testLegalMove() throws Exception {
             when(xIn.readLine()).thenReturn("2,1");
-            assertThat(x.getMove(game)).isEqualToComparingFieldByField(new Move(7));
+            assertThat(x.getMove(game)).isEqualToComparingFieldByField(Move.at(7));
         }
 
         @Test

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +30,7 @@ class TictactoeTest {
                 Pair.of(1, 2),
                 Pair.of(2, 2)).stream()
                 .map(pair -> pair.getLeft() * 3 + pair.getRight())
-                .map(Move::new)
+                .map(Move::at)
                 .collect(Collectors.toList());
         Iterator<Move> iter = moves.iterator();
 
