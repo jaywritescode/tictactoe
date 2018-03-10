@@ -14,11 +14,10 @@ public class Board implements SquareGrid {
 
     private final int SIZE;
 
-    final Piece[] pieces;
-
-    // TODO: make immutable
-    final List<List<Integer>> lines;
-    final Map<List<Piece>, Piece> winners;
+    private final Piece[] pieces;
+    
+    private final List<List<Integer>> lines;
+    private final Map<List<Piece>, Piece> winners;
 
     public Board() {
         this(3);
