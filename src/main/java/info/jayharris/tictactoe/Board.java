@@ -104,6 +104,10 @@ public class Board implements SquareGrid {
         return SIZE;
     }
 
+    public int numSquares() {
+        return SIZE * SIZE;
+    }
+
     public String pretty() {
         String d = String.format("\n%s\n", IntStream.range(0, getSize()).mapToObj(i -> "-").collect(Collectors.joining("+")));
 
