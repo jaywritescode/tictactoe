@@ -29,7 +29,7 @@ public class MinimaxState implements State<MinimaxState> {
     }
 
     @Override
-    public Collection<? extends Action<MinimaxState>> actions() {
+    public Collection<MinimaxAction> actions() {
         return IntStream.range(0, board.getSize())
                 .filter(it -> board.isOccupied(it))
                 .mapToObj(MinimaxAction::new)
@@ -38,11 +38,13 @@ public class MinimaxState implements State<MinimaxState> {
 
     @Override
     public boolean terminalTest() {
-        return false;
+        return board.getOutcome().isPresent();
     }
 
     @Override
-    public <T extends Comparable<T>> Utility<T> utility() {
+    public <T extends Comparable<T>, U extends Utility<T>> U utility() {
         return null;
     }
+
+
 }
