@@ -1,18 +1,10 @@
 package info.jayharris.tictactoe;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BoardCreator {
-
-    @Deprecated
-    public static Board create(Piece[] pieces) {
-        return create(pieces, pieces.length);
-    }
 
     public static Board create(Piece[][] pieces) {
         return create(Arrays.stream(pieces)
