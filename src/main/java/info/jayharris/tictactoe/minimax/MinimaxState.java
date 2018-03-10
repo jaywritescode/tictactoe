@@ -25,6 +25,7 @@ public class MinimaxState implements State<MinimaxState> {
         this.isOccupied = board::isOccupied;
     }
 
+    // TODO: return a copy of the board, not the original
     public Board getBoard() {
         return board;
     }
