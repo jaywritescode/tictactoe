@@ -12,7 +12,7 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MinimaxState implements State<MinimaxState, Long> {
+public class MinimaxState implements State<MinimaxState> {
 
     private final Board board;
     private final Piece toMove;
@@ -49,11 +49,6 @@ public class MinimaxState implements State<MinimaxState, Long> {
     @Override
     public boolean terminalTest() {
         return getOutcome().isPresent();
-    }
-
-    @Override
-    public Long utility() {
-        return null;
     }
 
     @Override
