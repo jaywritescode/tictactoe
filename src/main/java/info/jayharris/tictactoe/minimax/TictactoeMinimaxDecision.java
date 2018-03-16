@@ -5,27 +5,22 @@ import info.jayharris.tictactoe.Board;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Outcome;
 import info.jayharris.tictactoe.Piece;
-
-import java.util.function.Function;
+import org.apache.commons.lang3.Validate;
 
 public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxState> {
 
-    private TictactoeMinimaxDecision(MinimaxState root, Piece piece) {
-        super(root, utilityFn(piece));
-    }
+    private TictactoeMinimaxDecision(MinimaxState root) {
+        super(root, state -> {
+            Validate.isTrue(state.terminalTest());
 
-    static Function<MinimaxState, Long> utilityFn(Piece piece) {
-        return state -> {
-            if (!state.terminalTest()) {
-                return null;
-            }
+            Piece piece = root.getToMove();
 
             Outcome outcome = state.getOutcome().get();
-            if (outcome == Outcome.tie()) {
+            if (outcome.isTie()) {
                 return 0L;
             }
             return outcome.winner() == piece ? Long.MAX_VALUE : Long.MIN_VALUE;
-        };
+        });
     }
 
     /**
@@ -50,7 +45,7 @@ public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxSt
 
         MinimaxState state = new MinimaxState(board, Piece.X);
 
-        TictactoeMinimaxDecision decision = TictactoeMinimaxDecision.doCreate(state, Piece.X);
+        TictactoeMinimaxDecision decision = TictactoeMinimaxDecision.doCreate(state);
 
         System.err.println(decision.perform());
     }
