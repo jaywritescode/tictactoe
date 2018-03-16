@@ -38,6 +38,14 @@ public class MinimaxState implements State<MinimaxState> {
         return board.getOutcome();
     }
 
+    public static MinimaxState rootState() {
+        return rootState(3);
+    }
+
+    public static MinimaxState rootState(int size) {
+        return new MinimaxState(new Board(size), Piece.X);
+    }
+
     @Override
     public Collection<MinimaxAction> actions() {
         return IntStream.range(0, board.numSquares())

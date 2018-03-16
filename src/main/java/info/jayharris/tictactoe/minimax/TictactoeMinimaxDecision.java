@@ -28,8 +28,14 @@ public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxSt
         };
     }
 
-    public static TictactoeMinimaxDecision doCreate(MinimaxState root, Piece piece) {
-        return new TictactoeMinimaxDecision(root, piece);
+    /**
+     * Creates a minimax decision tree for tictactoe.
+     *
+     * @param root the current board state
+     * @return a decision tree
+     */
+    public static TictactoeMinimaxDecision doCreate(MinimaxState root) {
+        return new TictactoeMinimaxDecision(root);
     }
 
     public static void main(String... args) {
