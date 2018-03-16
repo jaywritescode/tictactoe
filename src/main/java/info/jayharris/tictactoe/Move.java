@@ -36,6 +36,14 @@ public class Move {
         return Objects.hash(index);
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Move{");
+        sb.append("index=").append(index);
+        sb.append('}');
+        return sb.toString();
+    }
+
     /**
      * Create a new Move.
      *

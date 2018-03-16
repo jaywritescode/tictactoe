@@ -35,6 +35,14 @@ public class MinimaxAction implements Action<MinimaxState> {
         return Objects.hash(move);
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("MinimaxAction{");
+        sb.append("move=").append(move);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static MinimaxAction from(int squareRef) {
         return new MinimaxAction(squareRef);
     }
