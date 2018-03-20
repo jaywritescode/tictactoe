@@ -23,19 +23,6 @@ public class MinimaxAction implements Action<MinimaxState> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MinimaxAction that = (MinimaxAction) o;
-        return Objects.equals(move, that.move);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(move);
-    }
-
-    @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("MinimaxAction{");
         sb.append("move=").append(move);
