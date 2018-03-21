@@ -22,6 +22,10 @@ public class MinimaxAction implements Action<MinimaxState> {
         return new MinimaxState(board, state.getToMove().opposite());
     }
 
+    public Move getMove() {
+        return move;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("MinimaxAction{");
