@@ -4,9 +4,7 @@ import info.jayharris.minimax.Action;
 import info.jayharris.tictactoe.Board;
 import info.jayharris.tictactoe.Move;
 
-import java.util.Objects;
-
-public class MinimaxAction implements Action<MinimaxState> {
+public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
 
     Move move;
 

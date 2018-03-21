@@ -14,8 +14,9 @@ public class MinimaxPlayer extends Player {
 
     @Override
     public Move getMove(Tictactoe game) {
-        TictactoeMinimaxDecision decision = TictactoeMinimaxDecision.doCreate(new MinimaxState(game.getBoard(), piece));
-
-        return null;
+        return TictactoeMinimaxDecision
+                .doCreate(new MinimaxState(game.getBoard(), piece))
+                .perform()
+                .getMove();
     }
 }

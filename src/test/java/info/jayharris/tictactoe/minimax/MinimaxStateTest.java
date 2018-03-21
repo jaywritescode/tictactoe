@@ -2,6 +2,7 @@ package info.jayharris.tictactoe.minimax;
 
 import info.jayharris.tictactoe.Board;
 import info.jayharris.tictactoe.BoardCreator;
+import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,12 +24,8 @@ class MinimaxStateTest {
         });
         MinimaxState state = new MinimaxState(board, Piece.X);
 
-        assertThat(state.actions()).containsExactlyInAnyOrder(
-                MinimaxAction.from(1),
-                MinimaxAction.from(5),
-                MinimaxAction.from(6),
-                MinimaxAction.from(7),
-                MinimaxAction.from(8));
+        assertThat(state.actions()).extracting("move").containsExactlyInAnyOrder(
+                Move.at(1), Move.at(5), Move.at(6), Move.at(7), Move.at(8));
     }
 
     @Nested

@@ -7,7 +7,7 @@ import info.jayharris.tictactoe.Outcome;
 import info.jayharris.tictactoe.Piece;
 import org.apache.commons.lang3.Validate;
 
-public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxState> {
+public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxState, MinimaxAction> {
 
     private TictactoeMinimaxDecision(MinimaxState root) {
         super(root, state -> {

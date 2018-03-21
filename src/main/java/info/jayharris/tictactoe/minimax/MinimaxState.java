@@ -12,7 +12,7 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MinimaxState implements State<MinimaxState> {
+public class MinimaxState implements State<MinimaxState, MinimaxAction> {
 
     private final Board board;
     private final Piece toMove;
