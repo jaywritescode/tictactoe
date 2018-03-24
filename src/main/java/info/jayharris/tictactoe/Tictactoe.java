@@ -45,7 +45,7 @@ public class Tictactoe implements SquareGrid {
      *
      * @return a copy of the board
      */
-    public Board getBoard() {
+    public Board copyBoard() {
         return new Board(this.board);
     }
 
