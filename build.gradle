@@ -14,6 +14,7 @@ repositories {
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
     compile files('../minimax/build/libs/minimax-1.0-SNAPSHOT.jar')
 //    compile group: 'com.github.jaywritescode', name: 'minimax', version: '-SNAPSHOT'
 

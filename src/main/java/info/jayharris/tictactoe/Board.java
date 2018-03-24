@@ -1,10 +1,14 @@
 package info.jayharris.tictactoe;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -15,9 +19,9 @@ public class Board implements SquareGrid {
     private final int SIZE;
 
     private final Piece[] pieces;
-    
-    private final List<List<Integer>> lines;
-    private final Map<List<Piece>, Piece> winners;
+
+    private final ImmutableList<ImmutableList<Integer>> lines;
+    private final ImmutableMap<ImmutableList<Piece>, Piece> winners;
 
     public Board() {
         this(3);
@@ -27,31 +31,22 @@ public class Board implements SquareGrid {
         this.SIZE = size;
         pieces = new Piece[SIZE * SIZE];
 
-        Function<Integer, List<Integer>> eachRow = (row) -> IntStream.range(0, SIZE).boxed()
-                .map(i -> SIZE * row + i)
-                .collect(Collectors.toList());
-        Function<Integer, List<Integer>> eachCol = (col) -> IntStream.range(0, SIZE).boxed()
-                .map(i -> col + SIZE * i)
-                .collect(Collectors.toList());
-        Function<Piece, List<Piece>> listOfPieces = (piece) -> IntStream.range(0, SIZE).boxed()
-                .map(i -> piece)
-                .collect(Collectors.toList());
-
-
         lines = Stream.of(
-                IntStream.range(0, SIZE).boxed().map(eachRow),
-                IntStream.range(0, SIZE).boxed().map(eachCol),
-                Stream.of(IntStream.range(0, SIZE).boxed()
+                IntStream.range(0, SIZE).mapToObj(this::getRowCoordsAsList),
+                IntStream.range(0, SIZE).mapToObj(this::getColumnCoordsAsList),
+                Stream.of(ImmutableList.copyOf(IntStream.range(0, SIZE).boxed()
                         .map(i -> SIZE * i + i)
-                        .collect(Collectors.toList())),
-                Stream.of(IntStream.range(0, SIZE).boxed()
+                        .collect(Collectors.toList()))),
+                Stream.of(ImmutableList.copyOf(IntStream.range(0, SIZE).boxed()
                         .map(i -> SIZE * i + (SIZE - i - 1))
-                        .collect(Collectors.toList())))
+                        .collect(Collectors.toList()))))
                 .flatMap(Function.identity())
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
 
-        winners = Stream.of(Piece.X, Piece.O)
-                .collect(Collectors.toMap(listOfPieces, Function.identity()));
+        winners = ImmutableMap.<ImmutableList<Piece>, Piece>builder()
+                .put(getListOfPieces(Piece.X), Piece.X)
+                .put(getListOfPieces(Piece.O), Piece.O)
+                .build();
     }
 
     public Board(Board board) {
@@ -115,6 +110,41 @@ public class Board implements SquareGrid {
                         .mapToObj(index -> Optional.ofNullable(pieces[index]).map(Piece::toString).orElse(StringUtils.SPACE))
                         .collect(Collectors.joining("|")))
                 .collect(Collectors.joining(d));
+    }
+
+    /**
+     * Gets the indices of the squares in a particular column.
+     *
+     * Example: on a 3 x 3 board, {@code getRowCoordsAsList(2) => [6,7,8]} since
+     * squares 6, 7, and 8 comprise the second row on the board (zero-indexed).
+     */
+    private ImmutableList<Integer> getRowCoordsAsList(int rowNum) {
+        ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        IntStream.range(0, SIZE).map(i -> SIZE * rowNum + i).forEach(builder::add);
+        return builder.build();
+    }
+
+    /**
+     * Gets the indices of the squares in a particular column.
+     *
+     * Example: on a 3 x 3 board, {@code getColumnCoordsAsList(1) => [1,4,7]} since
+     * squares 1, 4, and 7 comprise the first column on the board (zero-indexed).
+     */
+    private ImmutableList<Integer> getColumnCoordsAsList(int colNum) {
+        ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        IntStream.range(0, SIZE).map(i -> colNum + SIZE * i).forEach(builder::add);
+        return builder.build();
+    }
+
+    /**
+     * Creates a list of {@code SIZE} Pieces.
+     *
+     * Example: on a 4 x 4 board, {@code getListOfPieces(Piece.O) => [Piece.O, Piece.O, Piece.O, Piece.O]}.
+     */
+    private ImmutableList<Piece> getListOfPieces(Piece piece) {
+        ImmutableList.Builder<Piece> builder = ImmutableList.builder();
+        IntStream.range(0, SIZE).mapToObj(i -> piece).forEach(builder::add);
+        return builder.build();
     }
 
     @Override
