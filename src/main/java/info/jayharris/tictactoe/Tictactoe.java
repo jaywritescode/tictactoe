@@ -1,5 +1,6 @@
 package info.jayharris.tictactoe;
 
+import info.jayharris.tictactoe.player.MinimaxPlayer;
 import info.jayharris.tictactoe.player.Player;
 import info.jayharris.tictactoe.player.TerminalPlayer;
 
@@ -72,7 +73,7 @@ public class Tictactoe implements SquareGrid {
     }
 
     public static void main(String... args) {
-        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new TerminalPlayer(Piece.O));
+        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new MinimaxPlayer(Piece.O));
 
         Outcome outcome = game.play();
 
