@@ -5,10 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,8 +41,8 @@ public class Board implements SquareGrid {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
 
         winners = ImmutableMap.<ImmutableList<Piece>, Piece>builder()
-                .put(getListOfPieces(Piece.X), Piece.X)
-                .put(getListOfPieces(Piece.O), Piece.O)
+                .put(ImmutableList.copyOf(Collections.nCopies(SIZE, Piece.X)), Piece.X)
+                .put(ImmutableList.copyOf(Collections.nCopies(SIZE, Piece.O)), Piece.O)
                 .build();
     }
 
@@ -133,17 +130,6 @@ public class Board implements SquareGrid {
     private ImmutableList<Integer> getColumnCoordsAsList(int colNum) {
         ImmutableList.Builder<Integer> builder = ImmutableList.builder();
         IntStream.range(0, SIZE).map(i -> colNum + SIZE * i).forEach(builder::add);
-        return builder.build();
-    }
-
-    /**
-     * Creates a list of {@code SIZE} Pieces.
-     *
-     * Example: on a 4 x 4 board, {@code getListOfPieces(Piece.O) => [Piece.O, Piece.O, Piece.O, Piece.O]}.
-     */
-    private ImmutableList<Piece> getListOfPieces(Piece piece) {
-        ImmutableList.Builder<Piece> builder = ImmutableList.builder();
-        IntStream.range(0, SIZE).mapToObj(i -> piece).forEach(builder::add);
         return builder.build();
     }
 
