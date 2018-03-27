@@ -1,7 +1,6 @@
 package info.jayharris.tictactoe.minimax;
 
 import info.jayharris.minimax.Action;
-import info.jayharris.tictactoe.Board;
 import info.jayharris.tictactoe.Move;
 
 public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
@@ -14,10 +13,7 @@ public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
 
     @Override
     public MinimaxState apply(MinimaxState state) {
-        Board board = state.getBoardCopy();
-        board.setPiece(move, state.getToMove());
-
-        return new MinimaxState(board, state.getToMove().opposite());
+        return new MinimaxState(state, move);
     }
 
     public Move getMove() {

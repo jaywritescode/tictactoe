@@ -1,46 +1,64 @@
 package info.jayharris.tictactoe.minimax;
 
+import com.google.common.collect.Lists;
 import info.jayharris.minimax.State;
-import info.jayharris.tictactoe.Board;
-import info.jayharris.tictactoe.Outcome;
+import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
+import info.jayharris.tictactoe.SquareGrid;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MinimaxState implements State<MinimaxState, MinimaxAction> {
+public class MinimaxState extends SquareGrid implements State<MinimaxState, MinimaxAction> {
 
-    private final Board board;
+    private final ArrayList<Piece> board;
     private final Piece toMove;
 
-    private final IntPredicate isOccupied;
-
-    public MinimaxState(Board board, Piece toMove) {
-        this.board = board;
+    public MinimaxState(int size, Iterator<Piece> pieces, Piece toMove) {
+        super(size);
+        this.board = Lists.newArrayList(pieces);
         this.toMove = toMove;
-
-        this.isOccupied = board::isOccupied;
     }
 
-    public Board getBoardCopy() {
-        return new Board(board);
+    public MinimaxState(MinimaxState predecessor, Move move) {
+        super(predecessor.getSize());
+
+        this.board = new ArrayList<>();
+        board.addAll(predecessor.board);
+        board.set(move.getIndex(), predecessor.getToMove());
+
+        this.toMove = predecessor.getToMove().opposite();
     }
 
     public Piece getToMove() {
         return toMove;
     }
 
-    public Optional<Outcome> getOutcome() {
-        return board.getOutcome();
+    @Override
+    public Piece getPiece(int index) {
+        return board.get(index);
+    }
+
+    @Override
+    public boolean isOccupied(int index) {
+        return Objects.nonNull(getPiece(index));
+    }
+
+    @Override
+    public boolean isFull() {
+        return board.stream().allMatch(Objects::nonNull);
     }
 
     @Override
     public Collection<MinimaxAction> actions() {
-        return IntStream.range(0, board.numSquares())
+        IntPredicate isOccupied = this::isOccupied;
+
+        return IntStream.range(0, numSquares())
                 .filter(isOccupied.negate())
                 .mapToObj(MinimaxAction::new)
                 .collect(Collectors.toList());

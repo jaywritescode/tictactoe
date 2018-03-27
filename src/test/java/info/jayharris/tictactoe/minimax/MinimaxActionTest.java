@@ -6,7 +6,6 @@ import info.jayharris.tictactoe.Piece;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MinimaxActionTest {
 
@@ -20,7 +19,7 @@ class MinimaxActionTest {
                 new Piece[] { null, null, null, null, null }
         });
 
-        MinimaxState state = new MinimaxState(board, Piece.X);
+        MinimaxState state = new MinimaxState(board.getSize(), board.iterator(), Piece.X);
         MinimaxAction action = MinimaxAction.from(12);
 
         Board successor = BoardCreator.create(new Piece[][] {
@@ -31,6 +30,6 @@ class MinimaxActionTest {
                 new Piece[] {    null,    null,    null,    null,    null }
         });
 
-        assertThat(action.apply(state)).isEqualTo(new MinimaxState(successor, Piece.O));
+        assertThat(action.apply(state)).isEqualTo(new MinimaxState(board.getSize(), successor.iterator(), Piece.O));
     }
 }

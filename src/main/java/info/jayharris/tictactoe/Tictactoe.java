@@ -3,9 +3,10 @@ package info.jayharris.tictactoe;
 import info.jayharris.tictactoe.player.Player;
 import info.jayharris.tictactoe.player.TerminalPlayer;
 
+import java.util.Iterator;
 import java.util.Optional;
 
-public class Tictactoe implements SquareGrid {
+public class Tictactoe implements Square {
 
     private final Player x, o;
     private Player current;
@@ -41,12 +42,8 @@ public class Tictactoe implements SquareGrid {
         return board.pretty();
     }
 
-    /**
-     *
-     * @return a copy of the board
-     */
-    public Board getBoard() {
-        return new Board(this.board);
+    public Iterator<Piece> getPieces() {
+        return board.iterator();
     }
 
     /**
