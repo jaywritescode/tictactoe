@@ -49,7 +49,7 @@ public class Board extends SquareGrid {
     }
 
     public Iterator<Piece> iterator() {
-        return new ArrayIterator(pieces);
+        return new ArrayIterator<>(pieces);
     }
 
     public String pretty() {
