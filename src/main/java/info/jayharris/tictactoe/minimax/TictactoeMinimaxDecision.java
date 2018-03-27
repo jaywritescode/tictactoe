@@ -43,7 +43,7 @@ public class TictactoeMinimaxDecision extends TwoPlayerMinimaxDecision<MinimaxSt
         board.setPiece(Move.at(5), Piece.O);
         board.setPiece(Move.at(6), Piece.X);
 
-        MinimaxState state = new MinimaxState(board, Piece.X);
+        MinimaxState state = new MinimaxState(3, board.iterator(), Piece.X);
 
         TictactoeMinimaxDecision decision = TictactoeMinimaxDecision.doCreate(state);
 

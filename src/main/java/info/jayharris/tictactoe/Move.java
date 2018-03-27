@@ -15,7 +15,7 @@ public class Move {
         this.index = index;
     }
 
-    private Move(SquareGrid grid, Pair<Integer, Integer> coords) {
+    private Move(Square grid, Pair<Integer, Integer> coords) {
         this.index = coords.getLeft() * grid.getSize() + coords.getRight();
     }
 
@@ -63,7 +63,7 @@ public class Move {
      *               column and the topmost row are zero.
      * @return a Move at the given coordinates
      */
-    public static Move at(SquareGrid grid, Pair<Integer, Integer> coords) {
+    public static Move at(Square grid, Pair<Integer, Integer> coords) {
         return new Move(grid, coords);
     }
 }

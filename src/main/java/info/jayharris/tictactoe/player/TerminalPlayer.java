@@ -5,7 +5,10 @@ import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;

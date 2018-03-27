@@ -8,8 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.function.LongPredicate;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MinimaxStateTest {
@@ -22,7 +20,7 @@ class MinimaxStateTest {
                 new Piece[] { Piece.O, Piece.X,    null },
                 new Piece[] {    null,    null,    null }
         });
-        MinimaxState state = new MinimaxState(board, Piece.X);
+        MinimaxState state = new MinimaxState(3, board.iterator(), Piece.X);
 
         assertThat(state.actions()).extracting("move").containsExactlyInAnyOrder(
                 Move.at(1), Move.at(5), Move.at(6), Move.at(7), Move.at(8));
@@ -42,7 +40,7 @@ class MinimaxStateTest {
                     // @formatter:on
             });
 
-            assertThat(new MinimaxState(board, Piece.O).terminalTest()).isFalse();
+            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isFalse();
         }
 
         @Test
@@ -54,7 +52,7 @@ class MinimaxStateTest {
                     new Piece[] { Piece.O, Piece.X, Piece.X }
             });
 
-            assertThat(new MinimaxState(board, Piece.O).terminalTest()).isTrue();
+            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isTrue();
         }
 
         @Test
@@ -66,7 +64,7 @@ class MinimaxStateTest {
                     new Piece[] { Piece.O, Piece.O, Piece.X }
             });
 
-            assertThat(new MinimaxState(board, Piece.O).terminalTest()).isTrue();
+            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isTrue();
         }
     }
 }
