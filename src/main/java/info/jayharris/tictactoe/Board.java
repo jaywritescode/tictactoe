@@ -134,4 +134,20 @@ public class Board {
     public String toString() {
         return "Board{" + "pieces=" + pieces + '}';
     }
+
+    public static Board copyFrom(Tictactoe game) {
+        int size = game.getSize();
+
+        Board copy = new Board(size);
+
+        Iterator<Piece> iter = game.getPieces();
+        IntStream.range(0, size * size)
+                .forEach(i -> {
+                    Piece p = iter.next();
+                    if (p != null) {
+                        copy.setPiece(Move.at(i), p);
+                    }
+                });
+        return copy;
+    }
 }

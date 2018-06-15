@@ -39,6 +39,10 @@ public class Tictactoe {
         return winner.get();
     }
 
+    public Player getCurrentPlayer() {
+        return current;
+    }
+
     public int getPly() {
         return ply;
     }
