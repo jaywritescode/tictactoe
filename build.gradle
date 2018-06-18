@@ -17,7 +17,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '24.1-jre'
     compile group: 'com.github.jaywritescode', name: 'minimax', version: '-SNAPSHOT'
 
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0'
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.9.0'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.10.0'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.+'
 }

@@ -15,10 +15,6 @@ public class Move {
         this.index = index;
     }
 
-    private Move(Square grid, Pair<Integer, Integer> coords) {
-        this.index = coords.getLeft() * grid.getSize() + coords.getRight();
-    }
-
     public int getIndex() {
         return index;
     }
@@ -38,10 +34,7 @@ public class Move {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Move{");
-        sb.append("index=").append(index);
-        sb.append('}');
-        return sb.toString();
+        return "Move{" + "index=" + index + '}';
     }
 
     /**
@@ -55,15 +48,7 @@ public class Move {
         return new Move(index);
     }
 
-    /**
-     * Create a new Move.
-     *
-     * @param grid the game or board
-     * @param coords the move coordinates as {@code Pair.of(row, column)}. The leftmost
-     *               column and the topmost row are zero.
-     * @return a Move at the given coordinates
-     */
-    public static Move at(Square grid, Pair<Integer, Integer> coords) {
-        return new Move(grid, coords);
+    public static Move at(Pair<Integer, Integer> coords, Tictactoe game) {
+        return new Move(coords.getLeft() * game.getSize() + coords.getRight());
     }
 }

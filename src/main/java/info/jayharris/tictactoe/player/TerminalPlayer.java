@@ -18,14 +18,15 @@ public class TerminalPlayer extends Player {
 
     enum MoveState {
         IDLE, ACTIVE
-    };
-    MoveState state = MoveState.IDLE;
+    }
 
-    final BufferedReader reader;
-    final PrintStream out;
+    private MoveState state = MoveState.IDLE;
 
-    final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
-    final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: \n",
+    private final BufferedReader reader;
+    private final PrintStream out;
+
+    private final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
+    private final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: \n",
             ILLEGAL_MOVE_MSG = "Illegal move!",
             INVALID_MSG_TPL = "%s is invalid algebraic notation. Try again: ";
 
@@ -51,20 +52,19 @@ public class TerminalPlayer extends Player {
         try {
             while (true) {
                 if (PATTERN.matcher(line = reader.readLine()).matches()) {
-                    List<Integer> coords = Arrays.asList(line.split(",")).stream()
+                    List<Integer> coords = Arrays.stream(line.split(","))
                             .mapToInt(Integer::valueOf)
                             .boxed()
                             .collect(Collectors.toList());
 
                     if (coords.stream().allMatch(i -> i < game.getSize())) {
-                        return Move.at(game, Pair.of(coords.get(0), coords.get(1)));
+                        return Move.at(Pair.of(coords.get(0), coords.get(1)), game);
                     }
                 }
 
                 out.println(String.format(INVALID_MSG_TPL, line));
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,13 +1,15 @@
 package info.jayharris.tictactoe;
 
-import info.jayharris.tictactoe.player.MinimaxPlayer;
 import info.jayharris.tictactoe.player.Player;
 import info.jayharris.tictactoe.player.TerminalPlayer;
+import org.apache.commons.lang3.Validate;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-public class Tictactoe implements Square {
+public class Tictactoe {
 
     private final Player x, o;
     private Player current;
@@ -15,14 +17,19 @@ public class Tictactoe implements Square {
     private int ply;
 
     public Tictactoe(Player x, Player o) {
-        this.board = new Board();
+        this(x, o, 3);
+    }
+
+    Tictactoe(Player x, Player o, int size) {
+        this.board = new Board(size);
         this.current = this.x = x;
         this.o = o;
 
         this.ply = 0;
+
     }
 
-    public Outcome play() {
+    Outcome play() {
         Optional<Outcome> winner;
         while (!(winner = nextPly()).isPresent()) {
             current = (current == x ? o : x);
@@ -36,7 +43,7 @@ public class Tictactoe implements Square {
     }
 
     public int getSize() {
-        return board.getSize();
+        return board.SIZE;
     }
 
     public String pretty() {
@@ -56,21 +63,42 @@ public class Tictactoe implements Square {
         ++ply;
         current.begin(this);
 
-        while(true) {
-            try {
-                board.setPiece(current.getMove(this), current.piece);
-                current.end(this);
-            }
-            catch (IllegalArgumentException e) {
-                current.fail(this, e);
-            }
-
-            return board.getOutcome();
+        try {
+            board.setPiece(current.getMove(this), current.piece);
+            current.end(this);
         }
+        catch (IllegalArgumentException e) {
+            current.fail(this, e);
+        }
+
+        return getOutcome();
+    }
+
+    private Optional<Outcome> getOutcome() {
+        return Optional.ofNullable(
+                board.getAllTicTacToeLines()
+                .stream()
+                .filter(Tictactoe::isWinningLine)
+                .findFirst()
+                .map(Tictactoe::firstPiece)
+                .map(Outcome::new)
+                .orElse(board.isFull() ? Outcome.tie() : null));
+    }
+
+    private static Piece firstPiece(List<Piece> pieces) {
+        Validate.notEmpty(pieces);
+        return Validate.notNull(pieces.get(0));
+    }
+
+    private static boolean isWinningLine(List<Piece> pieces) {
+        Validate.notEmpty(pieces);
+
+        Piece first = pieces.get(0);
+        return first != null && pieces.stream().allMatch(Predicate.isEqual(first));
     }
 
     public static void main(String... args) {
-        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new MinimaxPlayer(Piece.O));
+        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new TerminalPlayer(Piece.O));
 
         Outcome outcome = game.play();
 

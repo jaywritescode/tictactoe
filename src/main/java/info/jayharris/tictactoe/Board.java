@@ -1,65 +1,113 @@
 package info.jayharris.tictactoe;
 
-import org.apache.commons.collections4.iterators.ArrayIterator;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class Board extends SquareGrid {
+public class Board {
 
-    private final Piece[] pieces;
+    final int SIZE;
+    private final ArrayList<Piece> pieces;
 
-    public Board() {
+    Board() {
         this(3);
     }
 
-    public Board(int size) {
-        super(size);
-        pieces = new Piece[numSquares()];
+    Board(int size) {
+        SIZE = size;
+
+        Vector<Piece> tmp = new Vector<>();
+        tmp.setSize(SIZE * SIZE);
+        pieces = new ArrayList<>(tmp);
     }
 
-    @Override
-    public Piece getPiece(int index) {
-        return pieces[index];
+    Piece getPiece(int index) {
+        return pieces.get(index);
     }
 
-    public void setPiece(Move move, Piece piece) {
+    void setPiece(Move move, Piece piece) {
         Validate.notNull(piece);
 
         int index;
         Validate.isTrue(!isOccupied(index = move.getIndex()));
 
-        pieces[index] = piece;
+        pieces.set(index, piece);
     }
 
-    @Override
     public boolean isOccupied(int index) {
         return Objects.nonNull(getPiece(index));
     }
 
-    @Override
-    public boolean isFull() {
-        return IntStream.range(0, numSquares()).allMatch(this::isOccupied);
+    boolean isFull() {
+        return pieces.stream().noneMatch(Objects::isNull);
     }
 
     public Iterator<Piece> iterator() {
-        return new ArrayIterator<>(pieces);
+        return pieces.iterator();
     }
 
-    public String pretty() {
-        String d = String.format("\n%s\n", IntStream.range(0, getSize()).mapToObj(i -> "-").collect(Collectors.joining("+")));
+    private List<Piece> getPiecesInRow(int row) {
+        return IntStream.range(0, SIZE)
+                .map(i -> row * SIZE + i)
+                .mapToObj(pieces::get)
+                .collect(Collectors.toList());
+    }
 
-        return IntStream.range(0, getSize())
-                .mapToObj(row -> IntStream.range(row * getSize(), (row + 1) * getSize())
-                        .mapToObj(index -> Optional.ofNullable(pieces[index]).map(Piece::toString).orElse(StringUtils.SPACE))
+    private List<Piece> getPiecesInColumn(int column) {
+        return IntStream.range(0, SIZE)
+                .map(i -> column + SIZE * i)
+                .mapToObj(pieces::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<Piece> getPiecesInUpperLeftToLowerRightDiag() {
+        return IntStream.range(0, SIZE)
+                .map(i -> i * SIZE + i)
+                .mapToObj(pieces::get)
+                .collect(Collectors.toList());
+    }
+
+    private List<Piece> getPiecesInUpperRightToLowerLeftDiag() {
+        return IntStream.range(0, SIZE)
+                .map(i -> (i + 1) * SIZE - (i + 1))
+                .mapToObj(pieces::get)
+                .collect(Collectors.toList());
+    }
+
+    List<List<Piece>> getAllTicTacToeLines() {
+        ImmutableList.Builder<List<Piece>> b = ImmutableList.builder();
+
+        IntStream.range(0, SIZE).forEach(i -> {
+            b.add(getPiecesInRow(i));
+            b.add(getPiecesInColumn(i));
+        });
+
+        b.add(getPiecesInUpperLeftToLowerRightDiag());
+        b.add(getPiecesInUpperRightToLowerLeftDiag());
+        return b.build();
+    }
+
+    private Stream<Piece> getPiecesFromToIntFunction(IntUnaryOperator op) {
+        return IntStream.range(0, SIZE).map(op).mapToObj(pieces::get);
+    }
+
+    String pretty() {
+        String separatorLine = "\n" +
+                               Collections.nCopies(SIZE, "-").stream().collect(Collectors.joining("+")) +
+                               '\n';
+
+        return IntStream.range(0, SIZE)
+                .mapToObj(i -> getPiecesInRow(i)
+                        .stream()
+                        .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
                         .collect(Collectors.joining("|")))
-                .collect(Collectors.joining(d));
+                .collect(Collectors.joining(separatorLine));
     }
 
     @Override
@@ -67,20 +115,16 @@ public class Board extends SquareGrid {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Board board = (Board) o;
-        return Arrays.equals(pieces, board.pieces);
+        return Objects.equals(pieces, board.pieces);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(pieces);
+        return Objects.hash(pieces);
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Board{");
-        sb.append("SIZE=").append(SIZE);
-        sb.append(", pieces=").append(pieces == null ? "null" : Arrays.asList(pieces).toString());
-        sb.append('}');
-        return sb.toString();
+        return "Board{" + "pieces=" + pieces + '}';
     }
 }
