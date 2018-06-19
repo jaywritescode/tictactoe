@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Validate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class Tictactoe {
@@ -52,6 +53,10 @@ public class Tictactoe {
 
     public Iterator<Piece> getPieces() {
         return board.iterator();
+    }
+
+    public Set<Move> getLegalMoves() {
+        return board.legalMoves();
     }
 
     /**

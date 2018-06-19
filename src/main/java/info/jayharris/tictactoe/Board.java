@@ -40,7 +40,7 @@ public class Board {
         pieces.set(index, piece);
     }
 
-    public boolean isOccupied(int index) {
+    boolean isOccupied(int index) {
         return Objects.nonNull(getPiece(index));
     }
 
@@ -50,6 +50,13 @@ public class Board {
 
     public Iterator<Piece> iterator() {
         return pieces.iterator();
+    }
+
+    Set<Move> legalMoves() {
+        return IntStream.range(0, pieces.size())
+                .filter(i -> pieces.get(i) == null)
+                .mapToObj(Move::at)
+                .collect(Collectors.toSet());
     }
 
     private List<Piece> getPiecesInRow(int row) {
