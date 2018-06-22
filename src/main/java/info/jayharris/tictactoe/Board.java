@@ -15,10 +15,6 @@ public class Board {
     final int SIZE;
     private final ArrayList<Piece> pieces;
 
-    Board() {
-        this(3);
-    }
-
     Board(int size) {
         SIZE = size;
 

@@ -11,7 +11,7 @@ class MinimaxActionTest {
 
     @Test
     void apply() {
-        MinimaxState initial = MinimaxState.of(BoardCreator.create(new Piece[][]{
+        MinimaxState initial = MinimaxState.of(BoardCreator.create(new Piece[][] {
                 //@formatter:off
                 new Piece[] { null   , null   , Piece.O },
                 new Piece[] { Piece.O, Piece.X, Piece.X },
@@ -19,7 +19,7 @@ class MinimaxActionTest {
                 //@formatter:on
         }), Piece.X);
 
-        MinimaxState expected = MinimaxState.of(BoardCreator.create(new Piece[][]{
+        MinimaxState expected = MinimaxState.of(BoardCreator.create(new Piece[][] {
                 //@formatter:off
                 new Piece[] { null   , null   , Piece.O },
                 new Piece[] { Piece.O, Piece.X, Piece.X },
