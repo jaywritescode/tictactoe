@@ -31,7 +31,7 @@ public class Board {
         return pieces.get(index);
     }
 
-    void setPiece(Move move, Piece piece) {
+    public void setPiece(Move move, Piece piece) {
         Validate.notNull(piece);
 
         int index;
@@ -52,7 +52,7 @@ public class Board {
         return pieces.iterator();
     }
 
-    Set<Move> legalMoves() {
+    public Set<Move> legalMoves() {
         return IntStream.range(0, pieces.size())
                 .filter(i -> pieces.get(i) == null)
                 .mapToObj(Move::at)
@@ -133,6 +133,22 @@ public class Board {
     @Override
     public String toString() {
         return "Board{" + "pieces=" + pieces + '}';
+    }
+
+    public static Board copyFrom(Board board) {
+        int size = board.SIZE;
+
+        Board copy = new Board(size);
+
+        Iterator<Piece> iter = board.iterator();
+        IntStream.range(0, size * size)
+                .forEach(i -> {
+                    Piece p = iter.next();
+                    if (p != null) {
+                        copy.setPiece(Move.at(i), p);
+                    }
+                });
+        return copy;
     }
 
     public static Board copyFrom(Tictactoe game) {
