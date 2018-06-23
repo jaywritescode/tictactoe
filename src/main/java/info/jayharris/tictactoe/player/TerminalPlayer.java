@@ -46,7 +46,7 @@ public class TerminalPlayer extends Player {
 
     @Override
     public Move getMove(Tictactoe game) {
-        out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), piece.toString()));
+        out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), getPiece().toString()));
 
         String line;
         try {

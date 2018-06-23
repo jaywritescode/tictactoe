@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class TictactoeTest {
+public class TictactoeTest {
 
     @Nested
     @DisplayName("run the entire game")

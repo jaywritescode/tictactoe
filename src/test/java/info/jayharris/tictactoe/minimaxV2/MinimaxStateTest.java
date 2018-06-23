@@ -19,7 +19,8 @@ class MinimaxStateTest {
                 new Piece[] { null   , Piece.O, null },
                 new Piece[] { Piece.X, Piece.X, null },
                 new Piece[] {    null,    null, null }
-        }), Piece.O);
+                //@formatter:on
+        }), Piece.O, null);
 
         assertThat(state.actions())
                 .extracting("move")

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
-class TerminalPlayerTest {
+public class TerminalPlayerTest {
 
     TerminalPlayer x, o;
     Tictactoe game;
@@ -35,6 +35,7 @@ class TerminalPlayerTest {
     }
 
     @Nested
+    @DisplayName("#getMove")
     class GetMove {
 
         @Test
