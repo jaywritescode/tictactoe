@@ -6,10 +6,14 @@ import info.jayharris.tictactoe.Tictactoe;
 
 public abstract class Player {
 
-    public final Piece piece;
+    private final Piece piece;
 
     protected Player(Piece piece) {
         this.piece = piece;
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 
     public abstract Move getMove(Tictactoe game);

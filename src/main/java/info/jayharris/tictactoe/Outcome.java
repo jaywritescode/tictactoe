@@ -22,11 +22,11 @@ public class Outcome {
         return new Outcome(null);
     }
 
-    boolean isTie() {
+    public boolean isTie() {
         return Objects.isNull(outcome);
     }
 
-    Piece winner() {
+    public Piece winner() {
         return outcome;
     }
 

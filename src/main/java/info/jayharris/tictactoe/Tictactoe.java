@@ -2,13 +2,10 @@ package info.jayharris.tictactoe;
 
 import info.jayharris.tictactoe.player.Player;
 import info.jayharris.tictactoe.player.TerminalPlayer;
-import org.apache.commons.lang3.Validate;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class Tictactoe {
 
@@ -73,37 +70,14 @@ public class Tictactoe {
         current.begin(this);
 
         try {
-            board.setPiece(current.getMove(this), current.piece);
+            board.setPiece(current.getMove(this), current.getPiece());
             current.end(this);
         }
         catch (IllegalArgumentException e) {
             current.fail(this, e);
         }
 
-        return getOutcome();
-    }
-
-    private Optional<Outcome> getOutcome() {
-        return Optional.ofNullable(
-                board.getAllTicTacToeLines()
-                .stream()
-                .filter(Tictactoe::isWinningLine)
-                .findFirst()
-                .map(Tictactoe::firstPiece)
-                .map(Outcome::new)
-                .orElse(board.isFull() ? Outcome.tie() : null));
-    }
-
-    private static Piece firstPiece(List<Piece> pieces) {
-        Validate.notEmpty(pieces);
-        return Validate.notNull(pieces.get(0));
-    }
-
-    private static boolean isWinningLine(List<Piece> pieces) {
-        Validate.notEmpty(pieces);
-
-        Piece first = pieces.get(0);
-        return first != null && pieces.stream().allMatch(Predicate.isEqual(first));
+        return TictactoeUtils.getOutcome(board);
     }
 
     public static void main(String... args) {
