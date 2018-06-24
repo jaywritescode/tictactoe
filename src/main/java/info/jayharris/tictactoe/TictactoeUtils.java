@@ -15,21 +15,27 @@ public class TictactoeUtils {
      * @return the outcome, if the game is over. Otherwise {@code Optional.empty()}.
      */
     public static Optional<Outcome> getOutcome(Board board) {
-        return Optional.ofNullable(board.getAllTicTacToeLines()
-                .stream()
-                .filter(TictactoeUtils::isWinningLine)
-                .findFirst()
+        return Optional.ofNullable(
+                TictactoeUtils.maybeWinningLine(board)
                 .map(TictactoeUtils::firstPiece)
                 .map(Outcome::new)
                 .orElse(board.isFull() ? Outcome.tie() : null));
     }
 
-    public static boolean isGameOver(Board board) {
-        return board.getAllTicTacToeLines()
-                .stream()
+    /**
+     * Is the game over?
+     *
+     * @param board the game board
+     * @return true iff the game has a winner
+     */
+    public static boolean hasWinner(Board board) {
+        return TictactoeUtils.maybeWinningLine(board).isPresent();
+    }
+
+    private static Optional<List<Piece>> maybeWinningLine(Board board) {
+        return board.getAllTicTacToeLines().stream()
                 .filter(TictactoeUtils::isWinningLine)
-                .findAny()
-                .isPresent();
+                .findAny();
     }
 
     private static Piece firstPiece(List<Piece> pieces) {

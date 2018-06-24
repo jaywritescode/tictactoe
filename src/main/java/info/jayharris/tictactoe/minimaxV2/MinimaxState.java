@@ -47,7 +47,7 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
 
     @Override
     public boolean terminalTest() {
-        return super.terminalTest() || TictactoeUtils.isGameOver(board);
+        return super.terminalTest() || TictactoeUtils.hasWinner(board);
     }
 
     public Board getBoard() {
