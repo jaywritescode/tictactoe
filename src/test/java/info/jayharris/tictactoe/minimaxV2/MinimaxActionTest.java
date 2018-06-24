@@ -17,7 +17,7 @@ class MinimaxActionTest {
                 new Piece[] { Piece.O, Piece.X, Piece.X },
                 new Piece[] {   null,     null,    null }
                 //@formatter:on
-        }), Piece.X);
+        }), Piece.X, Piece.X);
 
         MinimaxState expected = MinimaxState.of(BoardCreator.create(new Piece[][] {
                 //@formatter:off
@@ -25,7 +25,7 @@ class MinimaxActionTest {
                 new Piece[] { Piece.O, Piece.X, Piece.X },
                 new Piece[] {   null,     null, Piece.X }
                 //@formatter:on
-        }), Piece.O);
+        }), Piece.O, Piece.X);
 
         assertThat(MinimaxAction.from(Move.at(8)).apply(initial)).isEqualToComparingFieldByField(expected);
         assertThat(initial).isNotSameAs(expected);

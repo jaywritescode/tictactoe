@@ -24,6 +24,14 @@ public class TictactoeUtils {
                 .orElse(board.isFull() ? Outcome.tie() : null));
     }
 
+    public static boolean isGameOver(Board board) {
+        return board.getAllTicTacToeLines()
+                .stream()
+                .filter(TictactoeUtils::isWinningLine)
+                .findAny()
+                .isPresent();
+    }
+
     private static Piece firstPiece(List<Piece> pieces) {
         Validate.notEmpty(pieces);
         return Validate.notNull(pieces.get(0));

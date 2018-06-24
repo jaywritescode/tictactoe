@@ -14,6 +14,8 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
     Piece nextPiece;
     Piece playerPiece;
 
+    final static long WIN = 1, TIE = 0, LOSS = -1;
+
     MinimaxState(Board board, Piece nextPiece, Piece playerPiece) {
         this.board = board;
         this.nextPiece = nextPiece;
@@ -29,7 +31,7 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
 
     @Override
     public OptionalLong utility() {
-        if (!actions().isEmpty()) {
+        if (!terminalTest()) {
             return OptionalLong.empty();
         }
 
@@ -37,10 +39,15 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
         Outcome outcome = TictactoeUtils.getOutcome(board).orElseThrow(RuntimeException::new);
 
         if (outcome.isTie()) {
-            return OptionalLong.of(0L);
+            return OptionalLong.of(TIE);
         }
 
-        return OptionalLong.of(outcome.winner().equals(playerPiece) ? 1 : -1);
+        return OptionalLong.of(outcome.winner().equals(playerPiece) ? WIN : LOSS);
+    }
+
+    @Override
+    public boolean terminalTest() {
+        return super.terminalTest() || TictactoeUtils.isGameOver(board);
     }
 
     public Board getBoard() {
@@ -49,6 +56,10 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
 
     public Piece getNextPiece() {
         return nextPiece;
+    }
+
+    public MinimaxState successor(Board board) {
+        return MinimaxState.of(board, nextPiece.opposite(), playerPiece);
     }
 
     public static MinimaxState of(Tictactoe game, Player player) {

@@ -16,7 +16,7 @@ public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
     public MinimaxState apply(MinimaxState minimaxState) {
         Board copy = Board.copyFrom(minimaxState.getBoard());
         copy.setPiece(move, minimaxState.getNextPiece());
-        return MinimaxState.of(copy, minimaxState.getNextPiece().opposite());
+        return minimaxState.successor(copy);
     }
 
     static MinimaxAction from(Move move) {
