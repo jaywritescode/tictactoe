@@ -15,7 +15,7 @@ public class Board {
     final int SIZE;
     private final ArrayList<Piece> pieces;
 
-    Board(int size) {
+    private Board(int size) {
         SIZE = size;
 
         Vector<Piece> tmp = new Vector<>();
@@ -129,6 +129,10 @@ public class Board {
     @Override
     public String toString() {
         return "Board{" + "pieces=" + pieces + '}';
+    }
+
+    public static Board empty(int size) {
+        return new Board(size);
     }
 
     public static Board copyFrom(Board board) {

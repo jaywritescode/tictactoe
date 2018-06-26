@@ -14,7 +14,7 @@ public class BoardCreator {
     }
 
     public static Board create(Piece[] pieces, int size) {
-        Board board = new Board(size);
+        Board board = Board.empty(size);
 
         IntStream.range(0, size * size)
                 .filter(it -> pieces[it] != null)

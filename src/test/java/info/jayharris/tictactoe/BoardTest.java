@@ -17,7 +17,7 @@ public class BoardTest {
     @Test
     @DisplayName("#getPiece")
     void testGetPiece() {
-        Board board = new Board(4);
+        Board board = Board.empty(4);
 
         board.setPiece(Move.at(5), Piece.X);
         board.setPiece(Move.at(13), Piece.O);
@@ -38,7 +38,7 @@ public class BoardTest {
 
         @BeforeAll
         void init() {
-            board = new Board(3);
+            board = Board.empty(3);
 
             board.setPiece(Move.at(0), Piece.X);
         }
@@ -62,7 +62,7 @@ public class BoardTest {
     @Test
     @DisplayName("#isOccupied")
     void testIsOccupied() {
-        Board board = new Board(3);
+        Board board = Board.empty(3);
 
         board.setPiece(Move.at(8), Piece.O);
 
@@ -80,7 +80,7 @@ public class BoardTest {
 
         @BeforeEach
         void setUp() {
-            board = new Board(3);
+            board = Board.empty(3);
         }
 
         @Test
@@ -119,7 +119,7 @@ public class BoardTest {
     @Test
     @DisplayName("#isFull")
     void testIsFull() {
-        Board board = new Board(3);
+        Board board = Board.empty(3);
 
         board.setPiece(Move.at(0), Piece.X);
         board.setPiece(Move.at(1), Piece.X);
@@ -139,7 +139,7 @@ public class BoardTest {
     @Test
     @DisplayName("#getAllTicTacToeLines")
     void testGetAllTicTacToeLines() {
-        Board board = new Board(4);
+        Board board = Board.empty(4);
 
         /*
             X | O | O | X

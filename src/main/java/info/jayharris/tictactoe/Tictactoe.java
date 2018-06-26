@@ -19,12 +19,15 @@ public class Tictactoe {
     }
 
     Tictactoe(Player x, Player o, int size) {
-        this.board = new Board(size);
+        this(x, o, Board.empty(size));
+    }
+
+    Tictactoe(Player x, Player o, Board board) {
         this.current = this.x = x;
         this.o = o;
+        this.board = board;
 
         this.ply = 0;
-
     }
 
     Outcome play() {
