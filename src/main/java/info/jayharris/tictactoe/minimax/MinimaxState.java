@@ -1,85 +1,83 @@
 package info.jayharris.tictactoe.minimax;
 
-import com.google.common.collect.Lists;
-import info.jayharris.minimax.State;
-import info.jayharris.tictactoe.Move;
-import info.jayharris.tictactoe.Piece;
-import info.jayharris.tictactoe.SquareGrid;
+import info.jayharris.minimax.BaseState;
+import info.jayharris.tictactoe.*;
+import info.jayharris.tictactoe.player.Player;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.function.IntPredicate;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class MinimaxState extends SquareGrid implements State<MinimaxState, MinimaxAction> {
+public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
 
-    private final ArrayList<Piece> board;
-    private final Piece toMove;
+    Board board;
+    Piece nextPiece;
+    Piece playerPiece;
 
-    public MinimaxState(int size, Iterator<Piece> pieces, Piece toMove) {
-        super(size);
-        this.board = Lists.newArrayList(pieces);
-        this.toMove = toMove;
-    }
+    final static long WIN = 1, TIE = 0, LOSS = -1;
 
-    public MinimaxState(MinimaxState predecessor, Move move) {
-        super(predecessor.getSize());
-
-        this.board = new ArrayList<>();
-        board.addAll(predecessor.board);
-        board.set(move.getIndex(), predecessor.getToMove());
-
-        this.toMove = predecessor.getToMove().opposite();
-    }
-
-    public Piece getToMove() {
-        return toMove;
-    }
-
-    @Override
-    public Piece getPiece(int index) {
-        return board.get(index);
-    }
-
-    @Override
-    public boolean isOccupied(int index) {
-        return Objects.nonNull(getPiece(index));
-    }
-
-    @Override
-    public boolean isFull() {
-        return board.stream().allMatch(Objects::nonNull);
+    MinimaxState(Board board, Piece nextPiece, Piece playerPiece) {
+        this.board = board;
+        this.nextPiece = nextPiece;
+        this.playerPiece = playerPiece;
     }
 
     @Override
     public Collection<MinimaxAction> actions() {
-        IntPredicate isOccupied = this::isOccupied;
-
-        return IntStream.range(0, numSquares())
-                .filter(isOccupied.negate())
-                .mapToObj(MinimaxAction::new)
+        return board.legalMoves().stream()
+                .map(MinimaxAction::from)
                 .collect(Collectors.toList());
     }
 
     @Override
+    public OptionalLong utility() {
+        if (!terminalTest()) {
+            return OptionalLong.empty();
+        }
+
+        // TODO: throw a more informative exception
+        Outcome outcome = TictactoeUtils.getOutcome(board).orElseThrow(RuntimeException::new);
+
+        if (outcome.isTie()) {
+            return OptionalLong.of(TIE);
+        }
+
+        return OptionalLong.of(outcome.winner().equals(playerPiece) ? WIN : LOSS);
+    }
+
+    @Override
     public boolean terminalTest() {
-        return getOutcome().isPresent();
+        return super.terminalTest() || TictactoeUtils.hasWinner(board);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MinimaxState that = (MinimaxState) o;
-        return Objects.equals(board, that.board) &&
-               toMove == that.toMove;
+    public Board getBoard() {
+        return board;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(board, toMove);
+    public Piece getNextPiece() {
+        return nextPiece;
+    }
+
+    public MinimaxState successor(Board board) {
+        return MinimaxState.of(board, nextPiece.opposite(), playerPiece);
+    }
+
+    /**
+     * Create a MinimaxState on the current state of the game, assuming that Player
+     * is next to move.
+     *
+     * @param game
+     * @param player
+     * @return
+     */
+    public static MinimaxState root(Tictactoe game, Player player) {
+        Board board = Board.copyFrom(game);
+        Piece piece = player.getPiece();
+
+        return new MinimaxState(board, piece, piece);
+    }
+
+    protected static MinimaxState of(Board board, Piece nextPiece, Piece playerPiece) {
+        return new MinimaxState(board, nextPiece, playerPiece);
     }
 }

@@ -4,8 +4,8 @@ import info.jayharris.minimax.DecisionTree;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
-import info.jayharris.tictactoe.minimaxV2.MinimaxAction;
-import info.jayharris.tictactoe.minimaxV2.MinimaxState;
+import info.jayharris.tictactoe.minimax.MinimaxAction;
+import info.jayharris.tictactoe.minimax.MinimaxState;
 
 public class MinimaxPlayer extends Player {
 

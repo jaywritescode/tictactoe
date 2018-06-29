@@ -1,6 +1,6 @@
 package info.jayharris.tictactoe.minimax;
 
-import info.jayharris.tictactoe.Board;
+
 import info.jayharris.tictactoe.BoardCreator;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
@@ -10,61 +10,81 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MinimaxStateTest {
+public class MinimaxStateTest {
 
     @Test
-    @DisplayName("it collects the open squares as actions")
+    @DisplayName("it gets all the legal actions")
     void actions() {
-        Board board = BoardCreator.create(new Piece[][] {
-                new Piece[] { Piece.X,    null, Piece.O },
-                new Piece[] { Piece.O, Piece.X,    null },
-                new Piece[] {    null,    null,    null }
-        });
-        MinimaxState state = new MinimaxState(3, board.iterator(), Piece.X);
+        MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
+                //@formatter:off
+                new Piece[] { null   , Piece.O, null },
+                new Piece[] { Piece.X, Piece.X, null },
+                new Piece[] {    null,    null, null }
+                //@formatter:on
+        }), Piece.O, null);
 
-        assertThat(state.actions()).extracting("move").containsExactlyInAnyOrder(
-                Move.at(1), Move.at(5), Move.at(6), Move.at(7), Move.at(8));
+        assertThat(state.actions())
+                .extracting("move")
+                .containsExactlyInAnyOrder(Move.at(0), Move.at(2), Move.at(5), Move.at(6), Move.at(7), Move.at(8));
     }
 
     @Nested
-    @DisplayName("#terminalTest")
-    class TerminalTest {
+    @DisplayName("#utility")
+    class Utility {
+
         @Test
         @DisplayName("game not over")
         void gameNotOver() {
-            Board board = BoardCreator.create(new Piece[][] {
-                    // @formatter:off
-                    new Piece[] { Piece.O,    null,    null },
-                    new Piece[] {    null, Piece.X, Piece.X },
-                    new Piece[] {    null,    null,    null }
-                    // @formatter:on
-            });
+            MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
+                //@formatter:off
+                new Piece[] { null   , Piece.O, null },
+                new Piece[] { Piece.X, Piece.X, null },
+                new Piece[] {    null,    null, null }
+                //@formatter:on
+            }), Piece.O, null);
 
-            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isFalse();
+            assertThat(state.utility()).isEmpty();
         }
 
         @Test
-        @DisplayName("game over with no winner")
-        void gameOverNoWinner() {
-            Board board = BoardCreator.create(new Piece[][] {
-                    new Piece[] { Piece.O, Piece.O, Piece.X },
-                    new Piece[] { Piece.X, Piece.X, Piece.O },
+        @DisplayName("player wins")
+        void playerWins() {
+            MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
+                    //@formatter:off
+                    new Piece[] { Piece.O, Piece.X, Piece.O },
+                    new Piece[] { Piece.X, Piece.O,    null },
                     new Piece[] { Piece.O, Piece.X, Piece.X }
-            });
+                    //@formatter:on
+            }), null, Piece.O);
 
-            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isTrue();
+            assertThat(state.utility()).hasValue(MinimaxState.WIN);
         }
 
         @Test
-        @DisplayName("game over with winner")
-        void gameOverWithWinner() {
-            Board board = BoardCreator.create(new Piece[][] {
-                    new Piece[] { Piece.X,    null, Piece.X },
+        @DisplayName("player loses")
+        void playerLoses() {
+            MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
+                    //@formatter:off
+                    new Piece[] { Piece.O, Piece.X,    null },
                     new Piece[] {    null, Piece.X, Piece.O },
-                    new Piece[] { Piece.O, Piece.O, Piece.X }
-            });
+                    new Piece[] {    null, Piece.X,    null }
+                    //@formatter:on
+            }), null, Piece.O);
 
-            assertThat(new MinimaxState(3, board.iterator(), Piece.O).terminalTest()).isTrue();
+            assertThat(state.utility()).hasValue(MinimaxState.LOSS);
+        }
+
+        @Test
+        @DisplayName("tie game")
+        void tieGame() {
+            MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
+                    //@formatter:off
+                    new Piece[] { Piece.X, Piece.O, Piece.X },
+                    new Piece[] { Piece.O, Piece.X, Piece.X },
+                    new Piece[] { Piece.O, Piece.X, Piece.O }
+            }), null, Piece.X);
+
+            assertThat(state.utility()).hasValue(MinimaxState.TIE);
         }
     }
 }

@@ -1,4 +1,4 @@
-package info.jayharris.tictactoe.minimaxV2;
+package info.jayharris.tictactoe.minimax;
 
 import info.jayharris.minimax.Action;
 import info.jayharris.tictactoe.Board;
