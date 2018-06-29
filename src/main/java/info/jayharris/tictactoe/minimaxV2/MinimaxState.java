@@ -62,11 +62,19 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
         return MinimaxState.of(board, nextPiece.opposite(), playerPiece);
     }
 
-    public static MinimaxState of(Tictactoe game, Player player) {
+    /**
+     * Create a MinimaxState on the current state of the game, assuming that Player
+     * is next to move.
+     *
+     * @param game
+     * @param player
+     * @return
+     */
+    public static MinimaxState root(Tictactoe game, Player player) {
         Board board = Board.copyFrom(game);
-        Piece nextPiece = game.getCurrentPlayer().getPiece();
+        Piece piece = player.getPiece();
 
-        return new MinimaxState(board, nextPiece, player.getPiece());
+        return new MinimaxState(board, piece, piece);
     }
 
     protected static MinimaxState of(Board board, Piece nextPiece, Piece playerPiece) {

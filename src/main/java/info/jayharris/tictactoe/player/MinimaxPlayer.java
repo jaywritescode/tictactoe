@@ -1,10 +1,11 @@
 package info.jayharris.tictactoe.player;
 
+import info.jayharris.minimax.DecisionTree;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
-import info.jayharris.tictactoe.minimax.MinimaxState;
-import info.jayharris.tictactoe.minimax.TictactoeMinimaxDecision;
+import info.jayharris.tictactoe.minimaxV2.MinimaxAction;
+import info.jayharris.tictactoe.minimaxV2.MinimaxState;
 
 public class MinimaxPlayer extends Player {
 
@@ -14,9 +15,8 @@ public class MinimaxPlayer extends Player {
 
     @Override
     public Move getMove(Tictactoe game) {
-        return TictactoeMinimaxDecision
-                .doCreate(new MinimaxState(game.getSize(), game.getPieces(), piece))
-                .perform()
-                .getMove();
+        DecisionTree<MinimaxState, MinimaxAction> decisionTree = new DecisionTree<>(MinimaxState.root(game, this));
+
+        return decisionTree.perform().getMove();
     }
 }
