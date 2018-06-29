@@ -19,6 +19,10 @@ public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
         return minimaxState.successor(copy);
     }
 
+    public Move getMove() {
+        return move;
+    }
+
     static MinimaxAction from(Move move) {
         return new MinimaxAction(move);
     }
