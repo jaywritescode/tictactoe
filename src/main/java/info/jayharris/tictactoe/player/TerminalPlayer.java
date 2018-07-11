@@ -79,4 +79,9 @@ public class TerminalPlayer extends Player {
     public void end(Tictactoe game) {
         state = MoveState.IDLE;
     }
+
+    @Override
+    public void fail(Tictactoe game, Exception e) {
+        out.println(ILLEGAL_MOVE_MSG);
+    }
 }

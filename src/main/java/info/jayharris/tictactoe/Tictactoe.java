@@ -73,15 +73,16 @@ public class Tictactoe {
         ++ply;
         current.begin(this);
 
-        try {
-            board.setPiece(current.getMove(this), current.getPiece());
-            current.end(this);
+        while (true) {
+            try {
+                board.setPiece(current.getMove(this), current.getPiece());
+                current.end(this);
+                return TictactoeUtils.getOutcome(board);
+            }
+            catch (IllegalArgumentException e) {
+                current.fail(this, e);
+            }
         }
-        catch (IllegalArgumentException e) {
-            current.fail(this, e);
-        }
-
-        return TictactoeUtils.getOutcome(board);
     }
 
     public static void main(String... args) {
