@@ -1,5 +1,8 @@
 package info.jayharris.tictactoe;
 
+import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 import info.jayharris.tictactoe.player.MinimaxPlayer;
 import info.jayharris.tictactoe.player.Player;
 import info.jayharris.tictactoe.player.TerminalPlayer;
@@ -85,8 +88,51 @@ public class Tictactoe {
         }
     }
 
-    public static void main(String... args) {
-        Tictactoe game = new Tictactoe(new TerminalPlayer(Piece.X), new MinimaxPlayer(Piece.O));
+    public static void main(String... args) throws Exception {
+        class ClassnameConverter implements IStringConverter<Class<?>> {
+            @Override
+            public Class<?> convert(String value) {
+                try {
+                    return Class.forName("info.jayharris.tictactoe.player." + value);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }
+
+        class Args {
+            @Parameter(names = {"--size"}, description = "Board size")
+            private int size = 3;
+
+            @Parameter(
+                    names = {"--playerX"},
+                    description = "Type for Player X",
+                    converter = ClassnameConverter.class
+            )
+            private Class<? extends Player> playerX = TerminalPlayer.class;
+
+            @Parameter(
+                    names = {"--playerO"},
+                    description = "Type for Player O",
+                    converter = ClassnameConverter.class
+            )
+            private Class<? extends Player> playerO = MinimaxPlayer.class;
+
+            @Parameter(names = {"--redis"}, description = "Use Redis for transposition table (not implemented)")
+            private boolean useRedis = false;
+        }
+
+        Args parameters = new Args();
+        JCommander.newBuilder()
+                .addObject(parameters)
+                .build()
+                .parse(args);
+
+        Tictactoe game = new Tictactoe(
+                parameters.playerX.getConstructor(Piece.class).newInstance(Piece.X),
+                parameters.playerO.getConstructor(Piece.class).newInstance(Piece.O),
+                parameters.size);
 
         Outcome outcome = game.play();
 
