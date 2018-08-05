@@ -9,16 +9,20 @@ import info.jayharris.tictactoe.minimax.MinimaxState;
 
 public class MinimaxPlayer extends Player {
 
+    DecisionTree<MinimaxState, MinimaxAction> decisionTree;
+
     public MinimaxPlayer(Piece piece) {
         super(piece);
     }
 
     @Override
     public Move getMove(Tictactoe game) {
-        // The problem is that this creates a new minimax tree and
-        // recalculates every time we call this method, even though the
-        // tree has already been calculated.
-        DecisionTree<MinimaxState, MinimaxAction> decisionTree = new DecisionTree<>(MinimaxState.root(game, this));
+        if (decisionTree != null) {
+            decisionTree = new DecisionTree<>(MinimaxState.root(game, this), decisionTree.getTranspositionTable());
+        }
+        else {
+            decisionTree = new DecisionTree<>(MinimaxState.root(game, this));
+        }
 
         return decisionTree.perform().getMove();
     }
