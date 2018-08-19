@@ -96,10 +96,6 @@ public class Board {
         return b.build();
     }
 
-    private Stream<Piece> getPiecesFromToIntFunction(IntUnaryOperator op) {
-        return IntStream.range(0, SIZE).map(op).mapToObj(pieces::get);
-    }
-
     String pretty() {
         String separatorLine = "\n" +
                                Collections.nCopies(SIZE, "-").stream().collect(Collectors.joining("+")) +
