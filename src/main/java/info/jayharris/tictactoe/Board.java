@@ -1,14 +1,14 @@
 package info.jayharris.tictactoe;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.util.*;
-import java.util.function.IntUnaryOperator;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Board {
 
@@ -97,16 +97,35 @@ public class Board {
     }
 
     String pretty() {
-        String separatorLine = "\n" +
-                               Collections.nCopies(SIZE, "-").stream().collect(Collectors.joining("+")) +
-                               '\n';
+        return prettyPrinterSupplier.get().pretty();
+    }
 
-        return IntStream.range(0, SIZE)
-                .mapToObj(i -> getPiecesInRow(i)
-                        .stream()
-                        .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
-                        .collect(Collectors.joining("|")))
-                .collect(Collectors.joining(separatorLine));
+    final Supplier<PrettyPrinter> prettyPrinterSupplier = Suppliers.memoize(PrettyPrinter::new);
+
+    private class PrettyPrinter {
+
+        final String separatorRow = new StringBuilder("\n")
+                .append("  ")
+                .append(StringUtils.join(Collections.nCopies(SIZE, "-"), '+'))
+                .append("\n")
+                .toString();
+
+        final String filesRow = IntStream.range(0, SIZE)
+                .mapToObj(i -> String.valueOf((char) ('a' + i)))
+                .collect(Collectors.joining(" ", "\n  ", "\n"));
+
+        String pretty() {
+            return IntStream.iterate(SIZE - 1, x -> x - 1)
+                    .limit(SIZE)
+                    .mapToObj(this::rowIndexToString)
+                    .collect(Collectors.joining(separatorRow, "\n", filesRow));
+        }
+
+        private String rowIndexToString(int index) {
+            return getPiecesInRow(index).stream()
+                    .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
+                    .collect(Collectors.joining("|", String.format("%d ", index + 1), StringUtils.EMPTY));
+        }
     }
 
     @Override
