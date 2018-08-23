@@ -25,7 +25,6 @@ public class TerminalPlayer extends Player {
     private final BufferedReader reader;
     private final PrintStream out;
 
-    private final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
     private final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: \n",
             ILLEGAL_MOVE_MSG = "Illegal move!",
             INVALID_MSG_TPL = "%s is invalid algebraic notation. Try again: ";
@@ -48,25 +47,40 @@ public class TerminalPlayer extends Player {
     public Move getMove(Tictactoe game) {
         out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), getPiece().toString()));
 
-        String line;
-        try {
-            while (true) {
-                if (PATTERN.matcher(line = reader.readLine()).matches()) {
-                    List<Integer> coords = Arrays.stream(line.split(","))
-                            .mapToInt(Integer::valueOf)
-                            .boxed()
-                            .collect(Collectors.toList());
+        String highestRank = String.valueOf(game.getSize());
+        String highestFile = String.valueOf((char) ('a' + game.getSize() - 1));
+        String regex = String.format("[a-%s][1-%s]", highestFile, highestRank);
 
-                    if (coords.stream().allMatch(i -> i < game.getSize())) {
-                        return Move.at(Pair.of(coords.get(0), coords.get(1)), game);
-                    }
+        Pattern pattern = Pattern.compile(regex);
+
+        try {
+            String line;
+            while (true) {
+                if (pattern.matcher(line = reader.readLine()).matches()) {
+                    return Move.at(algebraicNotationToIndex(line, game));
                 }
 
                 out.println(String.format(INVALID_MSG_TPL, line));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private int algebraicNotationToIndex(String algebraicNotation, Tictactoe game) {
+        String file = algebraicNotation.substring(0, 1);
+        String rank = algebraicNotation.substring(1, 2);
+
+        return rankToIndex(rank) * game.getSize() + fileToIndex(file);
+    }
+
+    private int rankToIndex(String rank) {
+        return Integer.valueOf(rank) - 1;
+    }
+
+    private int fileToIndex(String file) {
+        return file.toLowerCase().charAt(0) - 'a';
     }
 
     @Override

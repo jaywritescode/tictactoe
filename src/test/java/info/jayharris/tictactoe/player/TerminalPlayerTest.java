@@ -41,14 +41,14 @@ public class TerminalPlayerTest {
         @Test
         @DisplayName("it gets a legal move")
         void testLegalMove() throws Exception {
-            when(xIn.readLine()).thenReturn("2,1");
-            assertThat(x.getMove(game)).isEqualToComparingFieldByField(Move.at(7));
+            when(xIn.readLine()).thenReturn("c2");
+            assertThat(x.getMove(game)).isEqualToComparingFieldByField(Move.at(5));
         }
 
         @Test
         @DisplayName("it handles an unparseable string")
         void testUnparseable() throws Exception {
-            when(xIn.readLine()).thenReturn("abc", "2,1");
+            when(xIn.readLine()).thenReturn("2,1", "b1");
 
             x.getMove(game);
             verify(xIn, times(2)).readLine();
@@ -57,7 +57,7 @@ public class TerminalPlayerTest {
         @Test
         @DisplayName("it handles numbers that are too big for the game board")
         void testIndexOutOfBounds() throws Exception {
-            when(xIn.readLine()).thenReturn("3,1", "2,1");
+            when(xIn.readLine()).thenReturn("d1", "a3");
 
             x.getMove(game);
             verify(xIn, times(2)).readLine();
