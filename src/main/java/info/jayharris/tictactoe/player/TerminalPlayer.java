@@ -23,8 +23,7 @@ public class TerminalPlayer extends Player {
     private final PrintStream out;
 
     private final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: \n",
-            ILLEGAL_MOVE_MSG = "Illegal move!",
-            INVALID_MSG_TPL = "%s is invalid algebraic notation. Try again: ";
+            ILLEGAL_MOVE_MSG = "Illegal move!";
 
     public TerminalPlayer(Piece piece) {
         this(piece, System.out);
@@ -52,7 +51,7 @@ public class TerminalPlayer extends Player {
                 try {
                     return getLegalMove(line.toLowerCase(), game);
                 } catch (IllegalArgumentException e) {
-                    out.println(String.format(INVALID_MSG_TPL, line));
+                    out.println(e.getMessage());
                 }
             }
         } catch (IOException e) {
@@ -83,7 +82,8 @@ public class TerminalPlayer extends Player {
         int size = game.getSize();
 
         int file = string.charAt(0) - 'a';
-        Validate.isTrue(file >= 0 && file < size, "File must be between 'a' and '%s', inclusive", (char) ('a' + size - 1));
+        Validate.isTrue(file >= 0 && file < size, "File must be between 'a' and '%s', inclusive",
+                        String.valueOf((char) ('a' + size - 1)));
 
         int rank = NumberUtils.toInt(string.substring(1));
         Validate.isTrue(rank > 0 && rank <= size, "Rank must be an integer between 1 and %d, inclusive", size);
@@ -92,7 +92,7 @@ public class TerminalPlayer extends Player {
 
         Move possibleMove = Move.at(row * size + column);
 
-        Validate.isTrue(game.isLegalMove(possibleMove));
+        Validate.isTrue(game.isLegalMove(possibleMove), ILLEGAL_MOVE_MSG);
 
         return possibleMove;
     }
