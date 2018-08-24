@@ -2,6 +2,7 @@ package info.jayharris.tictactoe;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -115,16 +116,14 @@ public class Board {
                 .collect(Collectors.joining(" ", "\n  ", "\n"));
 
         String pretty() {
-            return IntStream.iterate(SIZE - 1, x -> x - 1)
-                    .limit(SIZE)
-                    .mapToObj(this::rowIndexToString)
-                    .collect(Collectors.joining(separatorRow, "\n", filesRow));
-        }
+            Iterator<List<Piece>> partitioned = Iterators.partition(pieces.iterator(), SIZE);
 
-        private String rowIndexToString(int index) {
-            return getPiecesInRow(index).stream()
-                    .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
-                    .collect(Collectors.joining("|", String.format("%d ", index + 1), StringUtils.EMPTY));
+            return IntStream.iterate(SIZE, x -> x - 1)
+                    .limit(SIZE)
+                    .mapToObj(i -> partitioned.next().stream()
+                            .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
+                            .collect(Collectors.joining("|", String.format("%d ", i), StringUtils.EMPTY)))
+                    .collect(Collectors.joining(separatorRow, "\n", filesRow));
         }
     }
 
