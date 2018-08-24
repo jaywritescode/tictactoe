@@ -22,7 +22,7 @@ public class Tictactoe {
         this(x, o, 3);
     }
 
-    Tictactoe(Player x, Player o, int size) {
+    public Tictactoe(Player x, Player o, int size) {
         this(x, o, Board.empty(size));
     }
 
@@ -61,6 +61,10 @@ public class Tictactoe {
 
     public Iterator<Piece> getPieces() {
         return board.iterator();
+    }
+
+    public boolean isLegalMove(Move move) {
+        return !board.isOccupied(move.getIndex());
     }
 
     public Set<Move> getLegalMoves() {

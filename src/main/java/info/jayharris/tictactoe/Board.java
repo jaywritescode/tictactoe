@@ -1,14 +1,15 @@
 package info.jayharris.tictactoe;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.util.*;
-import java.util.function.IntUnaryOperator;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Board {
 
@@ -96,21 +97,34 @@ public class Board {
         return b.build();
     }
 
-    private Stream<Piece> getPiecesFromToIntFunction(IntUnaryOperator op) {
-        return IntStream.range(0, SIZE).map(op).mapToObj(pieces::get);
+    String pretty() {
+        return prettyPrinterSupplier.get().pretty();
     }
 
-    String pretty() {
-        String separatorLine = "\n" +
-                               Collections.nCopies(SIZE, "-").stream().collect(Collectors.joining("+")) +
-                               '\n';
+    final Supplier<PrettyPrinter> prettyPrinterSupplier = Suppliers.memoize(PrettyPrinter::new);
 
-        return IntStream.range(0, SIZE)
-                .mapToObj(i -> getPiecesInRow(i)
-                        .stream()
-                        .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
-                        .collect(Collectors.joining("|")))
-                .collect(Collectors.joining(separatorLine));
+    private class PrettyPrinter {
+
+        final String separatorRow = new StringBuilder("\n")
+                .append("  ")
+                .append(StringUtils.join(Collections.nCopies(SIZE, "-"), '+'))
+                .append("\n")
+                .toString();
+
+        final String filesRow = IntStream.range(0, SIZE)
+                .mapToObj(i -> String.valueOf((char) ('a' + i)))
+                .collect(Collectors.joining(" ", "\n  ", "\n"));
+
+        String pretty() {
+            Iterator<List<Piece>> partitioned = Iterators.partition(pieces.iterator(), SIZE);
+
+            return IntStream.iterate(SIZE, x -> x - 1)
+                    .limit(SIZE)
+                    .mapToObj(i -> partitioned.next().stream()
+                            .map(piece -> piece == null ? StringUtils.SPACE : piece.toString())
+                            .collect(Collectors.joining("|", String.format("%d ", i), StringUtils.EMPTY)))
+                    .collect(Collectors.joining(separatorRow, "\n", filesRow));
+        }
     }
 
     @Override

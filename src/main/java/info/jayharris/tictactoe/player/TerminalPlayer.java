@@ -3,16 +3,13 @@ package info.jayharris.tictactoe.player;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class TerminalPlayer extends Player {
 
@@ -25,10 +22,8 @@ public class TerminalPlayer extends Player {
     private final BufferedReader reader;
     private final PrintStream out;
 
-    private final static Pattern PATTERN = Pattern.compile("\\d+,\\d+");
     private final static String PLAYER_TO_MOVE_MSG_TPL = "Ply %s >> %s to play: \n",
-            ILLEGAL_MOVE_MSG = "Illegal move!",
-            INVALID_MSG_TPL = "%s is invalid algebraic notation. Try again: ";
+            ILLEGAL_MOVE_MSG = "Illegal move!";
 
     public TerminalPlayer(Piece piece) {
         this(piece, System.out);
@@ -48,23 +43,19 @@ public class TerminalPlayer extends Player {
     public Move getMove(Tictactoe game) {
         out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), getPiece().toString()));
 
-        String line;
         try {
+            String line;
             while (true) {
-                if (PATTERN.matcher(line = reader.readLine()).matches()) {
-                    List<Integer> coords = Arrays.stream(line.split(","))
-                            .mapToInt(Integer::valueOf)
-                            .boxed()
-                            .collect(Collectors.toList());
+                line = reader.readLine();
 
-                    if (coords.stream().allMatch(i -> i < game.getSize())) {
-                        return Move.at(Pair.of(coords.get(0), coords.get(1)), game);
-                    }
+                try {
+                    return getLegalMove(line.toLowerCase(), game);
+                } catch (IllegalArgumentException e) {
+                    out.println(e.getMessage());
                 }
-
-                out.println(String.format(INVALID_MSG_TPL, line));
             }
         } catch (IOException e) {
+            // TODO: handle this better
             throw new RuntimeException(e);
         }
     }
@@ -83,5 +74,26 @@ public class TerminalPlayer extends Player {
     @Override
     public void fail(Tictactoe game, Exception e) {
         out.println(ILLEGAL_MOVE_MSG);
+    }
+
+    private static Move getLegalMove(String string, Tictactoe game) {
+        Validate.isTrue(string.length() >= 2, "Algebraic notation must have length of two or more.");
+
+        int size = game.getSize();
+
+        int file = string.charAt(0) - 'a';
+        Validate.isTrue(file >= 0 && file < size, "File must be between 'a' and '%s', inclusive",
+                        String.valueOf((char) ('a' + size - 1)));
+
+        int rank = NumberUtils.toInt(string.substring(1));
+        Validate.isTrue(rank > 0 && rank <= size, "Rank must be an integer between 1 and %d, inclusive", size);
+
+        int row = size - rank, column = file;
+
+        Move possibleMove = Move.at(row * size + column);
+
+        Validate.isTrue(game.isLegalMove(possibleMove), ILLEGAL_MOVE_MSG);
+
+        return possibleMove;
     }
 }

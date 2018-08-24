@@ -3,6 +3,7 @@ package info.jayharris.tictactoe.player;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
+import info.jayharris.tictactoe.TictactoeBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.BufferedReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.*;
 
 
@@ -41,23 +43,48 @@ public class TerminalPlayerTest {
         @Test
         @DisplayName("it gets a legal move")
         void testLegalMove() throws Exception {
-            when(xIn.readLine()).thenReturn("2,1");
-            assertThat(x.getMove(game)).isEqualToComparingFieldByField(Move.at(7));
+            when(xIn.readLine()).thenReturn("a1");
+            assertThat(x.getMove(game)).isEqualToComparingFieldByField(Move.at(6));
         }
 
         @Test
-        @DisplayName("it handles an unparseable string")
-        void testUnparseable() throws Exception {
-            when(xIn.readLine()).thenReturn("abc", "2,1");
+        @DisplayName("it rejects algebraic notation with length less than two")
+        void testTooShort() throws Exception {
+            when(xIn.readLine()).thenReturn("", "b", "c2");
 
             x.getMove(game);
-            verify(xIn, times(2)).readLine();
+            verify(xIn, times(3)).readLine();
         }
 
         @Test
-        @DisplayName("it handles numbers that are too big for the game board")
-        void testIndexOutOfBounds() throws Exception {
-            when(xIn.readLine()).thenReturn("3,1", "2,1");
+        @DisplayName("it rejects invalid files")
+        void testInvalidFile() throws Exception {
+            when(xIn.readLine()).thenReturn("71", "e3", "A1");
+
+            x.getMove(game);
+            verify(xIn, times(3)).readLine();
+        }
+
+        @Test
+        @DisplayName("it rejects invalid ranks")
+        void testInvalidRank() throws Exception {
+            game = new Tictactoe(x, o, 12);
+
+            when(xIn.readLine()).thenReturn("b0", "a20", "fd", "H12");
+
+            x.getMove(game);
+            verify(xIn, times(4)).readLine();
+        }
+
+        @Test
+        @DisplayName("it rejects illegal moves")
+        void testIllegalMove() throws Exception {
+            game = new TictactoeBuilder()
+                    .setPlayer(x)
+                    .setAllMoves(Move.at(4))
+                    .build();
+
+            when(xIn.readLine()).thenReturn("b2", "c1");
 
             x.getMove(game);
             verify(xIn, times(2)).readLine();
