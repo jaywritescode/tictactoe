@@ -3,16 +3,13 @@ package info.jayharris.tictactoe.player;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class TerminalPlayer extends Player {
 
@@ -47,40 +44,21 @@ public class TerminalPlayer extends Player {
     public Move getMove(Tictactoe game) {
         out.print(String.format(PLAYER_TO_MOVE_MSG_TPL, game.getPly(), getPiece().toString()));
 
-        String highestRank = String.valueOf(game.getSize());
-        String highestFile = String.valueOf((char) ('a' + game.getSize() - 1));
-        String regex = String.format("[a-%s][1-%s]", highestFile, highestRank);
-
-        Pattern pattern = Pattern.compile(regex);
-
         try {
             String line;
             while (true) {
-                if (pattern.matcher(line = reader.readLine()).matches()) {
-                    return Move.at(algebraicNotationToIndex(line, game));
-                }
+                line = reader.readLine();
 
-                out.println(String.format(INVALID_MSG_TPL, line));
+                try {
+                    return getLegalMove(line.toLowerCase(), game);
+                } catch (IllegalArgumentException e) {
+                    out.println(String.format(INVALID_MSG_TPL, line));
+                }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
+            // TODO: handle this better
             throw new RuntimeException(e);
         }
-    }
-
-    private int algebraicNotationToIndex(String algebraicNotation, Tictactoe game) {
-        String file = algebraicNotation.substring(0, 1);
-        String rank = algebraicNotation.substring(1, 2);
-
-        return rankToIndex(rank) * game.getSize() + fileToIndex(file);
-    }
-
-    private int rankToIndex(String rank) {
-        return Integer.valueOf(rank) - 1;
-    }
-
-    private int fileToIndex(String file) {
-        return file.toLowerCase().charAt(0) - 'a';
     }
 
     @Override
@@ -97,5 +75,25 @@ public class TerminalPlayer extends Player {
     @Override
     public void fail(Tictactoe game, Exception e) {
         out.println(ILLEGAL_MOVE_MSG);
+    }
+
+    private static Move getLegalMove(String string, Tictactoe game) {
+        Validate.isTrue(string.length() >= 2, "Algebraic notation must have length of two or more.");
+
+        int size = game.getSize();
+
+        int file = string.charAt(0) - 'a';
+        Validate.isTrue(file >= 0 && file < size, "File must be between 'a' and '%s', inclusive", (char) ('a' + size - 1));
+
+        int rank = NumberUtils.toInt(string.substring(1));
+        Validate.isTrue(rank > 0 && rank <= size, "Rank must be an integer between 1 and %d, inclusive", size);
+
+        int row = size - rank, column = file;
+
+        Move possibleMove = Move.at(row * size + column);
+
+        Validate.isTrue(game.isLegalMove(possibleMove));
+
+        return possibleMove;
     }
 }

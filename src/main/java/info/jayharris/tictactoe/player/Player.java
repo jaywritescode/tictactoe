@@ -16,6 +16,12 @@ public abstract class Player {
         return piece;
     }
 
+    /**
+     * Gets a legal move.
+     *
+     * @param game the game
+     * @return a legal move
+     */
     public abstract Move getMove(Tictactoe game);
 
     public void begin(Tictactoe game) { }
