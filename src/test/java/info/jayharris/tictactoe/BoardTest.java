@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import java.util.Arrays;
 import java.util.List;
 
+import static info.jayharris.tictactoe.Piece.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -17,12 +18,12 @@ public class BoardTest {
     void testGetPiece() {
         Board board = Board.empty(4);
 
-        board.setPiece(Move.at(5), Piece.X);
-        board.setPiece(Move.at(13), Piece.O);
+        board.setPiece(Move.at(5), X);
+        board.setPiece(Move.at(13), O);
 
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(board.getPiece(5)).isEqualTo(Piece.X);
-        softly.assertThat(board.getPiece(13)).isEqualTo(Piece.O);
+        softly.assertThat(board.getPiece(5)).isEqualTo(X);
+        softly.assertThat(board.getPiece(13)).isEqualTo(O);
         softly.assertThat(board.getPiece(4)).isNull();
         softly.assertAll();
     }
@@ -38,22 +39,22 @@ public class BoardTest {
         void init() {
             board = Board.empty(3);
 
-            board.setPiece(Move.at(0), Piece.X);
+            board.setPiece(Move.at(0), X);
         }
 
         @Test
         @DisplayName("adds a piece to the board")
         void testSetPiece() {
-            board.setPiece(Move.at(3), Piece.O);
+            board.setPiece(Move.at(3), O);
 
-            assertThat(board.getPiece(0)).isEqualTo(Piece.X);
-            assertThat(board.getPiece(3)).isEqualTo(Piece.O);
+            assertThat(board.getPiece(0)).isEqualTo(X);
+            assertThat(board.getPiece(3)).isEqualTo(O);
         }
 
         @Test
         @DisplayName("can't put a piece in an occupied square")
         void testSquareIsOccupied() {
-            assertThatIllegalArgumentException().isThrownBy(() -> board.setPiece(Move.at(0), Piece.O));
+            assertThatIllegalArgumentException().isThrownBy(() -> board.setPiece(Move.at(0), O));
         }
     }
 
@@ -62,7 +63,7 @@ public class BoardTest {
     void testIsOccupied() {
         Board board = Board.empty(3);
 
-        board.setPiece(Move.at(8), Piece.O);
+        board.setPiece(Move.at(8), O);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(board.isOccupied(8)).isTrue();
@@ -84,15 +85,15 @@ public class BoardTest {
         @Test
         @DisplayName("board is full")
         void testIsFull() {
-            board.setPiece(Move.at(0), Piece.X);
-            board.setPiece(Move.at(1), Piece.X);
-            board.setPiece(Move.at(2), Piece.O);
-            board.setPiece(Move.at(3), Piece.O);
-            board.setPiece(Move.at(4), Piece.O);
-            board.setPiece(Move.at(5), Piece.X);
-            board.setPiece(Move.at(6), Piece.O);
-            board.setPiece(Move.at(7), Piece.X);
-            board.setPiece(Move.at(8), Piece.O);
+            board.setPiece(Move.at(0), X);
+            board.setPiece(Move.at(1), X);
+            board.setPiece(Move.at(2), O);
+            board.setPiece(Move.at(3), O);
+            board.setPiece(Move.at(4), O);
+            board.setPiece(Move.at(5), X);
+            board.setPiece(Move.at(6), O);
+            board.setPiece(Move.at(7), X);
+            board.setPiece(Move.at(8), O);
 
             assertThat(board.isFull()).isTrue();
         }
@@ -100,14 +101,14 @@ public class BoardTest {
         @Test
         @DisplayName("board is not full")
         void testIsNotFull() {
-            board.setPiece(Move.at(0), Piece.X);
-            board.setPiece(Move.at(1), Piece.X);
-            board.setPiece(Move.at(2), Piece.O);
-            board.setPiece(Move.at(3), Piece.O);
-            board.setPiece(Move.at(4), Piece.O);
-            board.setPiece(Move.at(6), Piece.O);
-            board.setPiece(Move.at(7), Piece.X);
-            board.setPiece(Move.at(8), Piece.O);
+            board.setPiece(Move.at(0), X);
+            board.setPiece(Move.at(1), X);
+            board.setPiece(Move.at(2), O);
+            board.setPiece(Move.at(3), O);
+            board.setPiece(Move.at(4), O);
+            board.setPiece(Move.at(6), O);
+            board.setPiece(Move.at(7), X);
+            board.setPiece(Move.at(8), O);
 
             assertThat(board.isFull()).isFalse();
         }
@@ -119,19 +120,19 @@ public class BoardTest {
     void testIsFull() {
         Board board = Board.empty(3);
 
-        board.setPiece(Move.at(0), Piece.X);
-        board.setPiece(Move.at(1), Piece.X);
-        board.setPiece(Move.at(2), Piece.O);
-        board.setPiece(Move.at(3), Piece.X);
-        board.setPiece(Move.at(4), Piece.O);
-        board.setPiece(Move.at(5), Piece.O);
-        board.setPiece(Move.at(6), Piece.X);
+        board.setPiece(Move.at(0), X);
+        board.setPiece(Move.at(1), X);
+        board.setPiece(Move.at(2), O);
+        board.setPiece(Move.at(3), X);
+        board.setPiece(Move.at(4), O);
+        board.setPiece(Move.at(5), O);
+        board.setPiece(Move.at(6), X);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(board.isFull()).isFalse();
 
-        board.setPiece(Move.at(7), Piece.O);
-        board.setPiece(Move.at(8), Piece.X);
+        board.setPiece(Move.at(7), O);
+        board.setPiece(Move.at(8), X);
     }
 
     @Test
@@ -148,28 +149,28 @@ public class BoardTest {
            ---+---+---+---
               |   |   | O
          */
-        board.setPiece(Move.at(0), Piece.X);
-        board.setPiece(Move.at(1), Piece.O);
-        board.setPiece(Move.at(2), Piece.O);
-        board.setPiece(Move.at(3), Piece.X);
-        board.setPiece(Move.at(4), Piece.O);
-        board.setPiece(Move.at(5), Piece.X);
-        board.setPiece(Move.at(10), Piece.X);
-        board.setPiece(Move.at(15), Piece.O);
+        board.setPiece(Move.at(0), X);
+        board.setPiece(Move.at(1), O);
+        board.setPiece(Move.at(2), O);
+        board.setPiece(Move.at(3), X);
+        board.setPiece(Move.at(4), O);
+        board.setPiece(Move.at(5), X);
+        board.setPiece(Move.at(10), X);
+        board.setPiece(Move.at(15), O);
 
         List<List<Piece>> lines = board.getAllTicTacToeLines();
 
         assertThat(lines).containsExactlyInAnyOrder(
-                Arrays.asList(Piece.X, Piece.O, Piece.O, Piece.X),
-                Arrays.asList(Piece.O, Piece.X, null, null),
-                Arrays.asList(null, null, Piece.X, null),
-                Arrays.asList(null, null, null, Piece.O),
-                Arrays.asList(Piece.X, Piece.O, null, null),
-                Arrays.asList(Piece.O, Piece.X, null, null),
-                Arrays.asList(Piece.O, null, Piece.X, null),
-                Arrays.asList(Piece.X, null, null, Piece.O),
-                Arrays.asList(Piece.X, Piece.X, Piece.X, Piece.O),
-                Arrays.asList(Piece.X, null, null, null));
+                Arrays.asList(X, O, O, X),
+                Arrays.asList(O, X, null, null),
+                Arrays.asList(null, null, X, null),
+                Arrays.asList(null, null, null, O),
+                Arrays.asList(X, O, null, null),
+                Arrays.asList(O, X, null, null),
+                Arrays.asList(O, null, X, null),
+                Arrays.asList(X, null, null, O),
+                Arrays.asList(X, X, X, O),
+                Arrays.asList(X, null, null, null));
     }
 
     @Nested
@@ -178,8 +179,7 @@ public class BoardTest {
         @Test
         @DisplayName("board with odd size")
         void rotate3() {
-            Board board = BoardCreator.create(new Piece[] {
-                    Piece.X, Piece.O, null, null, Piece.O, Piece.X, null, null, null}, 3);
+            Board board = BoardCreator.create(new Piece[] {X, O, null, null, O, X, null, null, null}, 3);
             /*
                 X | O |           |   | X
                ---+---+---     ---+---+---
@@ -190,17 +190,17 @@ public class BoardTest {
 
             board.rotate();
             assertThat(board).hasFieldOrPropertyWithValue(
-                    "pieces", Arrays.asList(null, null, Piece.X, null, Piece.O, Piece.O, null, Piece.X, null));
+                    "pieces", Arrays.asList(null, null, X, null, O, O, null, X, null));
         }
 
         @Test
         @DisplayName("board with even size")
         void rotate4() {
             Board board = BoardCreator.create(new Piece[][] {
-                    new Piece[] {Piece.X, Piece.O, Piece.O, Piece.X},
-                    new Piece[] {Piece.O, Piece.X,  null  ,  null  },
-                    new Piece[] { null  ,  null  , Piece.X,  null  },
-                    new Piece[] { null  ,  null  ,  null  , Piece.O}
+                    new Piece[] { X  ,  O  ,  O  ,  X  },
+                    new Piece[] { O  ,  X  , null, null},
+                    new Piece[] {null, null,  X  , null},
+                    new Piece[] {null, null, null,  O  }
             });
             /*
                X | O | O | X         |   | O | X
@@ -214,8 +214,8 @@ public class BoardTest {
 
             board.rotate();
             assertThat(board).hasFieldOrPropertyWithValue(
-                    "pieces", Arrays.asList(null, null, Piece.O, Piece.X, null, null, Piece.X,
-                                            Piece.O, null, Piece.X, null, Piece.O, Piece.O, null, null, Piece.X));
+                    "pieces", Arrays.asList(
+                            null, null, O, X, null, null, X, O, null, X, null, O, O, null, null, X));
         }
     }
 }
