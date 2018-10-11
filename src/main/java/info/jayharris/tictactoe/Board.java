@@ -28,6 +28,10 @@ public class Board {
         return pieces.get(index);
     }
 
+    private Piece getPiece(int row, int col) {
+        return pieces.get(row * SIZE + col);
+    }
+
     public void setPiece(Move move, Piece piece) {
         Validate.notNull(piece);
 
@@ -95,6 +99,24 @@ public class Board {
         b.add(getPiecesInUpperLeftToLowerRightDiag());
         b.add(getPiecesInUpperRightToLowerLeftDiag());
         return b.build();
+    }
+
+    /**
+     * Rotate the board 90° clockwise.
+     */
+    public void rotate() {
+        Piece[] rotated = new Piece[pieces.size()];
+        int s = SIZE - 1;
+
+        for (int row = 0; row < SIZE; ++row) {
+            for (int col = 0; col < SIZE; ++col) {
+                rotated[col * SIZE + s - row] = getPiece(row, col);
+            }
+        }
+
+        for (int i = 0; i < pieces.size(); i++) {
+            pieces.set(i, rotated[i]);
+        }
     }
 
     String pretty() {
