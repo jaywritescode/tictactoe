@@ -6,8 +6,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -172,5 +170,52 @@ public class BoardTest {
                 Arrays.asList(Piece.X, null, null, Piece.O),
                 Arrays.asList(Piece.X, Piece.X, Piece.X, Piece.O),
                 Arrays.asList(Piece.X, null, null, null));
+    }
+
+    @Nested
+    class Rotate {
+
+        @Test
+        @DisplayName("board with odd size")
+        void rotate3() {
+            Board board = BoardCreator.create(new Piece[] {
+                    Piece.X, Piece.O, null, null, Piece.O, Piece.X, null, null, null}, 3);
+            /*
+                X | O |           |   | X
+               ---+---+---     ---+---+---
+                  | O | X  ==>    | O | O
+               ---+---+---     ---+---+---
+                  |   |           | X |
+             */
+
+            board.rotate();
+            assertThat(board).hasFieldOrPropertyWithValue(
+                    "pieces", Arrays.asList(null, null, Piece.X, null, Piece.O, Piece.O, null, Piece.X, null));
+        }
+
+        @Test
+        @DisplayName("board with even size")
+        void rotate4() {
+            Board board = BoardCreator.create(new Piece[][] {
+                    new Piece[] {Piece.X, Piece.O, Piece.O, Piece.X},
+                    new Piece[] {Piece.O, Piece.X,  null  ,  null  },
+                    new Piece[] { null  ,  null  , Piece.X,  null  },
+                    new Piece[] { null  ,  null  ,  null  , Piece.O}
+            });
+            /*
+               X | O | O | X         |   | O | X
+              ---+---+---+---     ---+---+---+---
+               O | X |   |           |   | X | O
+              ---+---+---+--- ==> ---+---+---+---
+                 |   | X |           | X |   | O
+              ---+---+---+---     ---+---+---+---
+                 |   |   | O       O |   |   | X
+            */
+
+            board.rotate();
+            assertThat(board).hasFieldOrPropertyWithValue(
+                    "pieces", Arrays.asList(null, null, Piece.O, Piece.X, null, null, Piece.X,
+                                            Piece.O, null, Piece.X, null, Piece.O, Piece.O, null, null, Piece.X));
+        }
     }
 }
