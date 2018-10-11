@@ -108,14 +108,25 @@ public class Board {
         Piece[] rotated = new Piece[pieces.size()];
         int s = SIZE - 1;
 
-        for (int row = 0; row < SIZE; ++row) {
-            for (int col = 0; col < SIZE; ++col) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
                 rotated[col * SIZE + s - row] = getPiece(row, col);
             }
         }
 
         for (int i = 0; i < pieces.size(); i++) {
             pieces.set(i, rotated[i]);
+        }
+    }
+
+    public void reflectOverVerticalAxis() {
+        Piece tmp;
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE / 2; col++) {
+                tmp = getPiece(row, col);
+                pieces.set(row * SIZE + col, getPiece(row, SIZE - 1 - col));
+                pieces.set(row * SIZE + SIZE - 1 - col, tmp);
+            }
         }
     }
 

@@ -218,4 +218,69 @@ public class BoardTest {
                             null, null, O, X, null, null, X, O, null, X, null, O, O, null, null, X));
         }
     }
+
+    @Nested
+    class Reflect {
+
+        @Nested
+        class ReflectOverHorizontalAxis {
+
+            @Test
+            @DisplayName("board with odd size")
+            void reflect3() {
+
+            }
+
+            @Test
+            @DisplayName("board with even size")
+            void reflect4() {
+
+            }
+        }
+
+        @Nested
+        class ReflectOverVerticalAxis {
+
+            @Test
+            @DisplayName("board with odd size")
+            void reflect3() {
+                Board board = BoardCreator.create(new Piece[] {X, O, X, null, O, X, O, null, null}, 3);
+                 /*
+                    X | O | X       X | O | X
+                   ---+---+---     ---+---+---
+                      | O | X  ==>  X | O |
+                   ---+---+---     ---+---+---
+                    O |   |           |   | O
+                 */
+
+                 board.reflectOverVerticalAxis();
+                 assertThat(board).hasFieldOrPropertyWithValue(
+                         "pieces", Arrays.asList(X, O, X, X, O, null, null, null, O));
+            }
+
+            @Test
+            @DisplayName("board with even size")
+            void reflect4() {
+                Board board = BoardCreator.create(new Piece[][] {
+                        new Piece[] {null,  X  , null, null},
+                        new Piece[] { O  ,  X  ,  O  , null},
+                        new Piece[] { X  ,  O  ,  X  ,  O  },
+                        new Piece[] {null, null, null,  X  }
+                });
+                /*
+                       | X |   |           |   | X |
+                    ---+---+---+---     ---+---+---+---
+                     O | X | O |           | O | X | O
+                    ---+---+---+--- ==> ---+---+---+---
+                     X | O | X | O       O | X | O | X
+                    ---+---+---+---     ---+---+---+---
+                       |   |   | X       X |   |   |
+                 */
+
+                board.reflectOverVerticalAxis();
+                assertThat(board).hasFieldOrPropertyWithValue(
+                        "pieces", Arrays.asList(null, null, X, null, null, O, X, O, O, X, O, X, X, null, null, null));
+            }
+        }
+    }
 }
