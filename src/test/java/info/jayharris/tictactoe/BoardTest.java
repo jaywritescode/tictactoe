@@ -228,15 +228,46 @@ public class BoardTest {
             @Test
             @DisplayName("board with odd size")
             void reflect3() {
+                Board board = BoardCreator.create(new Piece[] {X, O, X, null, O, X, O, null, null}, 3);
+                 /*
+                    X | O | X       O |   |
+                   ---+---+---     ---+---+---
+                      | O | X  ==>    | O | X
+                   ---+---+---     ---+---+---
+                    O |   |         X | O | X
+                 */
 
+                board.reflectOverHorizontalAxis();
+                assertThat(board).hasFieldOrPropertyWithValue(
+                        "pieces", Arrays.asList(O, null, null, null, O, X, X, O, X));
             }
 
             @Test
             @DisplayName("board with even size")
             void reflect4() {
+                Board board = BoardCreator.create(new Piece[][] {
+                        new Piece[] {null, X, null, null},
+                        new Piece[] {O, X, O, null},
+                        new Piece[] {X, O, X, O},
+                        new Piece[] {null, null, null, X}
+                });
+                /*
+                       | X |   |           |   |   | X
+                    ---+---+---+---     ---+---+---+---
+                     O | X | O |         X | O | X | O
+                    ---+---+---+--- ==> ---+---+---+---
+                     X | O | X | O       O | X | O |
+                    ---+---+---+---     ---+---+---+---
+                       |   |   | X         | X |   |
+                 */
+
+                board.reflectOverHorizontalAxis();
+                assertThat(board).hasFieldOrPropertyWithValue(
+                        "pieces", Arrays.asList(null, null, null, X, X, O, X, O, O, X, O, null, null, X, null, null));
 
             }
         }
+
 
         @Nested
         class ReflectOverVerticalAxis {

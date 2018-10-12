@@ -41,6 +41,10 @@ public class Board {
         pieces.set(index, piece);
     }
 
+    private void setPiece(int row, int col, Piece piece) {
+        pieces.set(row * SIZE + col, piece);
+    }
+
     boolean isOccupied(int index) {
         return Objects.nonNull(getPiece(index));
     }
@@ -116,6 +120,17 @@ public class Board {
 
         for (int i = 0; i < pieces.size(); i++) {
             pieces.set(i, rotated[i]);
+        }
+    }
+
+    public void reflectOverHorizontalAxis() {
+        Piece tmp;
+        for (int row = 0; row < SIZE / 2; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                tmp = getPiece(row, col);
+                setPiece(row, col, getPiece(SIZE - 1 - row, col));
+                setPiece(SIZE - 1 - row, col, tmp);
+            }
         }
     }
 
