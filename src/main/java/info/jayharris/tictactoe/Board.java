@@ -139,8 +139,8 @@ public class Board {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE / 2; col++) {
                 tmp = getPiece(row, col);
-                pieces.set(row * SIZE + col, getPiece(row, SIZE - 1 - col));
-                pieces.set(row * SIZE + SIZE - 1 - col, tmp);
+                setPiece(row, col, getPiece(row, SIZE - 1 - col));
+                setPiece(row,SIZE - 1 - col, tmp);
             }
         }
     }
