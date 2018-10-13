@@ -108,7 +108,7 @@ public class Board {
     /**
      * Rotate the board 90° clockwise.
      */
-    public void rotate() {
+    public Board rotate() {
         Piece[] rotated = new Piece[pieces.size()];
         int s = SIZE - 1;
 
@@ -121,9 +121,11 @@ public class Board {
         for (int i = 0; i < pieces.size(); i++) {
             pieces.set(i, rotated[i]);
         }
+
+        return this;
     }
 
-    public void reflectOverHorizontalAxis() {
+    public Board reflectOverHorizontalAxis() {
         Piece tmp;
         for (int row = 0; row < SIZE / 2; row++) {
             for (int col = 0; col < SIZE; col++) {
@@ -132,9 +134,10 @@ public class Board {
                 setPiece(SIZE - 1 - row, col, tmp);
             }
         }
+        return this;
     }
 
-    public void reflectOverVerticalAxis() {
+    public Board reflectOverVerticalAxis() {
         Piece tmp;
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE / 2; col++) {
@@ -143,6 +146,7 @@ public class Board {
                 setPiece(row,SIZE - 1 - col, tmp);
             }
         }
+        return this;
     }
 
     String pretty() {
