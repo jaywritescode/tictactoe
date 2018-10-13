@@ -313,5 +313,67 @@ public class BoardTest {
                         "pieces", Arrays.asList(null, null, X, null, null, O, X, O, O, X, O, X, X, null, null, null));
             }
         }
+
+        @Nested
+        class ReflectOverNorthwestSoutheastAxis {
+
+            @Test
+            void reflect() {
+                Board board = BoardCreator.create(new Piece[][] {
+                        new Piece[] {  X  , null, null,  O   },
+                        new Piece[] { null,  X  ,  X  ,  O   },
+                        new Piece[] {  O  , null, null, null },
+                        new Piece[] { null,  X  ,  O  ,  X   }
+                });
+                /*
+                     X |   |   | O       X |   | O |
+                    ---+---+---+---     ---+---+---+---
+                       | X | X | O         | X |   | X
+                    ---+---+---+--- ==> ---+---+---+---
+                     O |   |   |           | X |   | O
+                    ---+---+---+---     ---+---+---+---
+                       | X | O | X       O | O |   | X
+                 */
+
+                board.reflectOverNorthwestSoutheastAxis();
+                assertThat(board).hasFieldOrPropertyWithValue(
+                        "pieces", Arrays.asList(X, null, O, null, null, X, null, X, null, X, null, O, O, O, null, X));
+
+            }
+        }
+
+        @Nested
+        class ReflectOverNortheastSouthwestAxis {
+
+            @Test
+            void reflect() {
+                Board board = BoardCreator.create(new Piece[][] {
+                        new Piece[] { null,  X  , null,  O  , null },
+                        new Piece[] { null, null,  O  ,  X  ,  X   },
+                        new Piece[] {  X  , null,  O  , null,  X   },
+                        new Piece[] { null,  O  , null, null,  X   },
+                        new Piece[] {  X  , null,  O  , null, null }
+                });
+                System.out.println(board.pretty());
+                /*
+                       | X |   | O |           | X | X | X |
+                    ---+---+---+---+---     ---+---+---+---+---
+                       |   | O | X | X         |   |   | X | O
+                    ---+---+---+---+--- ==> ---+---+---+---+---
+                     X |   | O |   | X       O |   | O | O |
+                    ---+---+---+---+---     ---+---+---+---+---
+                       | O |   |   | X         | O |   |   | X
+                    ---+---+---+---+---     ---+---+---+---+---
+                     X |   | O |   |         X |   | X |   |
+                 */
+
+                board.reflectOverNortheastSouthwestAxis();
+                System.out.println(board.pretty());
+                assertThat(board).hasFieldOrPropertyWithValue(
+                        "pieces", Arrays.asList(null, X, X, X, null, null, null, null, X, O, O, null, O, O,
+                                                null, null, O, null, null, X, X, null, X, null, null));
+
+            }
+        }
     }
 }

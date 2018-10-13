@@ -149,6 +149,30 @@ public class Board {
         return this;
     }
 
+    public Board reflectOverNorthwestSoutheastAxis() {
+        Piece tmp;
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = row; col < SIZE; col++) {
+                tmp = getPiece(row, col);
+                setPiece(row, col, getPiece(col, row));
+                setPiece(col, row, tmp);
+            }
+        }
+        return this;
+    }
+
+    public Board reflectOverNortheastSouthwestAxis() {
+        Piece tmp;
+        for (int row = 0; row < SIZE - 1; row++) {
+            for (int col = 0; col < SIZE - 1 - row; col++) {
+                tmp = getPiece(row, col);
+                setPiece(row, col, getPiece(SIZE - 1 - col, SIZE - 1 - row));
+                setPiece(SIZE - 1 - col, SIZE - 1 - row, tmp);
+            }
+        }
+        return this;
+    }
+
     String pretty() {
         return prettyPrinterSupplier.get().pretty();
     }
