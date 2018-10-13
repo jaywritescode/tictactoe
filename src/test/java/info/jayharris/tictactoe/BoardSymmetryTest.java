@@ -63,4 +63,30 @@ class BoardSymmetryTest {
         Board reflected = Board.copyFrom(board).reflectOverVerticalAxis();
         assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
     }
+
+    @Test
+    @DisplayName("a board is equivalent to its reflection over the northwest-southeast axis")
+    void testReflectOverNorthwestSoutheastAxis() {
+        Board reflected = Board.copyFrom(board).reflectOverNorthwestSoutheastAxis();
+        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+    }
+
+    @Test
+    @DisplayName("a board is equivalent to its reflection over the northeast-southwest axis")
+    void testReflectOverNortheastSouthwestAxis() {
+        Board reflected = Board.copyFrom(board).reflectOverNortheastSouthwestAxis();
+        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+    }
+
+    @Test
+    @DisplayName("non-symmetrical boards are not equivalent")
+    void testNonEquivalence() {
+        Board other = BoardCreator.create(new Piece[][] {
+                new Piece[] {  X  ,  X  ,  O  , null },
+                new Piece[] { null,  O  , null, null },
+                new Piece[] { null,  O  ,  X  ,  O   },
+                new Piece[] {  X  ,  X  , null,  X   }
+        });
+        assertThat(symmetry.doEquivalent(board, other)).isFalse();
+    }
 }

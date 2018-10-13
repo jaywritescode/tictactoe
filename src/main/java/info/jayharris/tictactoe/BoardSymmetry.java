@@ -29,6 +29,8 @@ public class BoardSymmetry extends Equivalence<Board> {
         symmetries.add(Board.copyFrom(tmp).rotate());
         symmetries.add(Board.copyFrom(board).reflectOverHorizontalAxis());
         symmetries.add(Board.copyFrom(board).reflectOverVerticalAxis());
+        symmetries.add(Board.copyFrom(board).reflectOverNorthwestSoutheastAxis());
+        symmetries.add(Board.copyFrom(board).reflectOverNortheastSouthwestAxis());
 
         return symmetries;
     }
