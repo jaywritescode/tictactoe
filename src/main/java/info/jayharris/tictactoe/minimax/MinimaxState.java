@@ -6,14 +6,13 @@ import info.jayharris.tictactoe.*;
 import info.jayharris.tictactoe.player.Player;
 
 import java.util.Collection;
-import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
 
-    Board board;
-    Piece nextPiece;
-    Piece playerPiece;
+    private final Board board;
+    private final Piece nextPiece;
+    private final Piece playerPiece;
 
     final static long WIN = 1, TIE = 0, LOSS = -1;
 
@@ -31,25 +30,21 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
     }
 
     @Override
-    public OptionalDouble utility() {
-        // should only be called at terminal nodes (b/c this tree is small enough to fully enumerate)
-        Outcome outcome = TictactoeUtils.getOutcome(board).orElseThrow(RuntimeException::new);
+    public double eval() {
+        Outcome outcome = TictactoeUtils.getOutcome(board)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Error: for tictactoe, eval should only be called on terminal nodes."));
 
         if (outcome.isTie()) {
-            return OptionalDouble.of(TIE);
+            return TIE;
         }
 
-        return OptionalDouble.of(outcome.winner().equals(playerPiece) ? WIN : LOSS);
-    }
-
-    @Override
-    public double eval() {
-        return utility().getAsDouble();
+        return outcome.winner().equals(playerPiece) ? WIN : LOSS;
     }
 
     @Override
     public boolean terminalTest() {
-        return super.terminalTest() || TictactoeUtils.hasWinner(board);
+        return TictactoeUtils.hasWinner(board);
     }
 
     public Board getBoard() {

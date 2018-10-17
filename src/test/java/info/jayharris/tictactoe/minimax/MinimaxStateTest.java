@@ -29,22 +29,8 @@ public class MinimaxStateTest {
     }
 
     @Nested
-    @DisplayName("#utility")
-    class Utility {
-
-        @Test
-        @DisplayName("game not over")
-        void gameNotOver() {
-            MinimaxState state = MinimaxState.of(BoardCreator.create(new Piece[][] {
-                //@formatter:off
-                new Piece[] { null   , Piece.O, null },
-                new Piece[] { Piece.X, Piece.X, null },
-                new Piece[] {    null,    null, null }
-                //@formatter:on
-            }), Piece.O, null);
-
-            assertThat(state.utility()).isEmpty();
-        }
+    @DisplayName("#eval")
+    class Eval {
 
         @Test
         @DisplayName("player wins")
@@ -57,7 +43,7 @@ public class MinimaxStateTest {
                     //@formatter:on
             }), null, Piece.O);
 
-            assertThat(state.utility()).hasValue(MinimaxState.WIN);
+            assertThat(state.eval()).isEqualTo(MinimaxState.WIN);
         }
 
         @Test
@@ -71,7 +57,7 @@ public class MinimaxStateTest {
                     //@formatter:on
             }), null, Piece.O);
 
-            assertThat(state.utility()).hasValue(MinimaxState.LOSS);
+            assertThat(state.eval()).isEqualTo(MinimaxState.LOSS);
         }
 
         @Test
@@ -82,9 +68,10 @@ public class MinimaxStateTest {
                     new Piece[] { Piece.X, Piece.O, Piece.X },
                     new Piece[] { Piece.O, Piece.X, Piece.X },
                     new Piece[] { Piece.O, Piece.X, Piece.O }
+                    //@formatter:on
             }), null, Piece.X);
 
-            assertThat(state.utility()).hasValue(MinimaxState.TIE);
+            assertThat(state.eval()).isEqualTo(MinimaxState.TIE);
         }
     }
 }
