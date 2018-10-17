@@ -8,6 +8,18 @@ import java.util.Set;
 
 public class BoardSymmetry extends Equivalence<Board> {
 
+    private static BoardSymmetry singleton = null;
+
+    private BoardSymmetry() { };
+
+    public static BoardSymmetry instance() {
+        if (singleton == null) {
+            singleton = new BoardSymmetry();
+        }
+
+        return singleton;
+    }
+
     @Override
     protected boolean doEquivalent(Board a, Board b) {
         return rotationsAndReflections(a).contains(b);
@@ -35,7 +47,7 @@ public class BoardSymmetry extends Equivalence<Board> {
         return symmetries;
     }
 
-    public static BoardSymmetry create() {
-        return new BoardSymmetry();
+    public static BoardSymmetry.Wrapper<Board> create(Board board) {
+        return BoardSymmetry.instance().wrap(board);
     }
 }

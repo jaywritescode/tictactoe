@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BoardSymmetryTest {
 
     Board board;
-    BoardSymmetry symmetry = BoardSymmetry.create();
+    BoardSymmetry symmetry = BoardSymmetry.instance();
 
     @BeforeEach
     void setUp() {
@@ -26,56 +26,56 @@ class BoardSymmetryTest {
     @Test
     @DisplayName("a board is equivalent to itself")
     void testIdentity() {
-        assertThat(symmetry.doEquivalent(board, board)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(board));
     }
 
     @Test
     @DisplayName("a board is equivalent its 90° rotation")
     void testRotateClockwise() {
         Board rotated = Board.copyFrom(board).rotate();
-        assertThat(symmetry.doEquivalent(board, rotated)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(rotated));
     }
 
     @Test
     @DisplayName("a board is equivalent its 180° rotation")
     void testRotateAround() {
         Board rotated = Board.copyFrom(board).rotate().rotate();
-        assertThat(symmetry.doEquivalent(board, rotated)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(rotated));
     }
 
     @Test
     @DisplayName("a board is equivalent its 270° rotation")
     void testRotateCounterClockwise() {
         Board rotated = Board.copyFrom(board).rotate().rotate().rotate();
-        assertThat(symmetry.doEquivalent(board, rotated)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(rotated));
     }
 
     @Test
     @DisplayName("a board is equivalent to its reflection over the horizontal axis")
     void testReflectOverHorizontalAxis() {
         Board reflected = Board.copyFrom(board).reflectOverHorizontalAxis();
-        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(reflected));
     }
 
     @Test
     @DisplayName("a board is equivalent to its reflection over the vertical axis")
     void testReflectOverVerticalAxis() {
         Board reflected = Board.copyFrom(board).reflectOverVerticalAxis();
-        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(reflected));
     }
 
     @Test
     @DisplayName("a board is equivalent to its reflection over the northwest-southeast axis")
     void testReflectOverNorthwestSoutheastAxis() {
         Board reflected = Board.copyFrom(board).reflectOverNorthwestSoutheastAxis();
-        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(reflected));
     }
 
     @Test
     @DisplayName("a board is equivalent to its reflection over the northeast-southwest axis")
     void testReflectOverNortheastSouthwestAxis() {
         Board reflected = Board.copyFrom(board).reflectOverNortheastSouthwestAxis();
-        assertThat(symmetry.doEquivalent(board, reflected)).isTrue();
+        assertThat(BoardSymmetry.create(board)).isEqualTo(symmetry.wrap(reflected));
     }
 
     @Test
@@ -87,6 +87,6 @@ class BoardSymmetryTest {
                 new Piece[] { null,  O  ,  X  ,  O   },
                 new Piece[] {  X  ,  X  , null,  X   }
         });
-        assertThat(symmetry.doEquivalent(board, other)).isFalse();
+        assertThat(BoardSymmetry.create(board)).isNotEqualTo(symmetry.wrap(other));
     }
 }
