@@ -1,11 +1,12 @@
 package info.jayharris.tictactoe.minimax;
 
 import info.jayharris.minimax.BaseState;
+import info.jayharris.minimax.Node;
 import info.jayharris.tictactoe.*;
 import info.jayharris.tictactoe.player.Player;
 
 import java.util.Collection;
-import java.util.OptionalLong;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
@@ -30,19 +31,20 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
     }
 
     @Override
-    public OptionalLong utility() {
-        if (!terminalTest()) {
-            return OptionalLong.empty();
-        }
-
-        // TODO: throw a more informative exception
+    public OptionalDouble utility() {
+        // should only be called at terminal nodes (b/c this tree is small enough to fully enumerate)
         Outcome outcome = TictactoeUtils.getOutcome(board).orElseThrow(RuntimeException::new);
 
         if (outcome.isTie()) {
-            return OptionalLong.of(TIE);
+            return OptionalDouble.of(TIE);
         }
 
-        return OptionalLong.of(outcome.winner().equals(playerPiece) ? WIN : LOSS);
+        return OptionalDouble.of(outcome.winner().equals(playerPiece) ? WIN : LOSS);
+    }
+
+    @Override
+    public double eval() {
+        return utility().getAsDouble();
     }
 
     @Override
@@ -70,11 +72,11 @@ public class MinimaxState extends BaseState<MinimaxState, MinimaxAction> {
      * @param player
      * @return
      */
-    public static MinimaxState root(Tictactoe game, Player player) {
+    public static Node<MinimaxState, MinimaxAction> root(Tictactoe game, Player player) {
         Board board = Board.copyFrom(game);
         Piece piece = player.getPiece();
 
-        return new MinimaxState(board, piece, piece);
+        return Node.root(MinimaxState.of(board, piece, piece));
     }
 
     protected static MinimaxState of(Board board, Piece nextPiece, Piece playerPiece) {

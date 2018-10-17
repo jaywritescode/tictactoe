@@ -1,11 +1,13 @@
 package info.jayharris.tictactoe.player;
 
 import info.jayharris.minimax.DecisionTree;
+import info.jayharris.minimax.transposition.InMemoryMapTranspositions;
 import info.jayharris.tictactoe.Move;
 import info.jayharris.tictactoe.Piece;
 import info.jayharris.tictactoe.Tictactoe;
 import info.jayharris.tictactoe.minimax.MinimaxAction;
 import info.jayharris.tictactoe.minimax.MinimaxState;
+import info.jayharris.tictactoe.minimax.TictactoeCutoffTest;
 
 public class MinimaxPlayer extends Player {
 
@@ -17,12 +19,10 @@ public class MinimaxPlayer extends Player {
 
     @Override
     public Move getMove(Tictactoe game) {
-        if (decisionTree != null) {
-            decisionTree = new DecisionTree<>(MinimaxState.root(game, this), decisionTree.getTranspositionTable());
-        }
-        else {
-            decisionTree = new DecisionTree<>(MinimaxState.root(game, this));
-        }
+        decisionTree = new DecisionTree<>(
+                MinimaxState.root(game, this),
+                new InMemoryMapTranspositions<>(),
+                TictactoeCutoffTest.create());
 
         return decisionTree.perform().getMove();
     }
