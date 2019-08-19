@@ -13,17 +13,17 @@ public class MinimaxAction implements Action<MinimaxState, MinimaxAction> {
     }
 
     @Override
-    public MinimaxState apply(MinimaxState minimaxState) {
-        Board copy = Board.copyFrom(minimaxState.getBoard());
-        copy.setPiece(move, minimaxState.getNextPiece());
-        return minimaxState.successor(copy);
+    public MinimaxState apply(MinimaxState initialState) {
+        Board copy = Board.copyFrom(initialState.getBoard());
+        copy.setPiece(move, initialState.getToMove());
+        return new MinimaxState(copy, initialState.getToMove().opposite());
     }
 
     public Move getMove() {
         return move;
     }
 
-    static MinimaxAction from(Move move) {
+    static MinimaxAction create(Move move) {
         return new MinimaxAction(move);
     }
 }

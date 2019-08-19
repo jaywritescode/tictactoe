@@ -43,10 +43,6 @@ public class Tictactoe {
         return winner.get();
     }
 
-    public Player getCurrentPlayer() {
-        return current;
-    }
-
     public int getPly() {
         return ply;
     }
@@ -59,7 +55,7 @@ public class Tictactoe {
         return board.pretty();
     }
 
-    public Iterator<Piece> getPieces() {
+    Iterator<Piece> getPieces() {
         return board.iterator();
     }
 
