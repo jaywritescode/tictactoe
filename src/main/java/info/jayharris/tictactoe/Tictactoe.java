@@ -18,10 +18,23 @@ public class Tictactoe {
     private final Board board;
     private int ply;
 
+    /**
+     * Construct a new Tictactoe game.
+     *
+     * @param x the X player
+     * @param o the O player
+     */
     public Tictactoe(Player x, Player o) {
         this(x, o, 3);
     }
 
+    /**
+     * Construct a new Tictactoe game.
+     *
+     * @param x the X player
+     * @param o the O player
+     * @param size the width (or height) of the board, in squares
+     */
     public Tictactoe(Player x, Player o, int size) {
         this(x, o, Board.empty(size));
     }
@@ -43,14 +56,29 @@ public class Tictactoe {
         return winner.get();
     }
 
+    /**
+     * Gets the current ply. Before the first move, the current ply is 0.
+     *
+     * @return the current ply
+     */
     public int getPly() {
         return ply;
     }
 
+    /**
+     * Gets the width (or height) of the board, in squares.
+     *
+     * @return the board size
+     */
     public int getSize() {
         return board.SIZE;
     }
 
+    /**
+     * Gets a pretty-printable string displaying the game.
+     *
+     * @return a pretty-printable string
+     */
     public String pretty() {
         return board.pretty();
     }
@@ -59,10 +87,21 @@ public class Tictactoe {
         return board.iterator();
     }
 
+    /**
+     * Determines if {@code move} is legal at this point in the game.
+     *
+     * @param move the move
+     * @return true iff {@code move} is legal
+     */
     public boolean isLegalMove(Move move) {
         return !board.isOccupied(move.getIndex());
     }
 
+    /**
+     * Gets a collection of legal moves at this point in the game.
+     *
+     * @return a set of legal moves
+     */
     public Set<Move> getLegalMoves() {
         return board.legalMoves();
     }
