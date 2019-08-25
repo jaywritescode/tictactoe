@@ -24,7 +24,7 @@ class TictactoeEvaluationFunctionTest {
                     //@formatter:on
         }), null);
 
-        TictactoeEvaluationFunction eval = new TictactoeEvaluationFunction(player);
+        TictactoeEvaluationFunction eval = TictactoeEvaluationFunction.create(player);
         assertThat(eval.apply(state)).isEqualTo(TictactoeEvaluationFunction.WIN);
     }
 
@@ -39,7 +39,7 @@ class TictactoeEvaluationFunctionTest {
                     //@formatter:on
         }), null);
 
-        TictactoeEvaluationFunction eval = new TictactoeEvaluationFunction(player);
+        TictactoeEvaluationFunction eval = TictactoeEvaluationFunction.create(player);
         assertThat(eval.apply(state)).isEqualTo(TictactoeEvaluationFunction.LOSS);
     }
 
@@ -54,7 +54,7 @@ class TictactoeEvaluationFunctionTest {
                     //@formatter:on
         }), null);
 
-        TictactoeEvaluationFunction eval = new TictactoeEvaluationFunction(player);
+        TictactoeEvaluationFunction eval = TictactoeEvaluationFunction.create(player);
         assertThat(eval.apply(state)).isEqualTo(TictactoeEvaluationFunction.TIE);
     }
 }

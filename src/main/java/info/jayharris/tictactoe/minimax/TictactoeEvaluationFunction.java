@@ -11,7 +11,7 @@ public class TictactoeEvaluationFunction implements EvaluationFunction<MinimaxSt
 
     final static long WIN = 1, TIE = 0, LOSS = -1;
 
-    public TictactoeEvaluationFunction(Player player) {
+    private TictactoeEvaluationFunction(Player player) {
         this.player = player;
     }
 
@@ -24,5 +24,9 @@ public class TictactoeEvaluationFunction implements EvaluationFunction<MinimaxSt
             return TIE;
         }
         return outcome.winner().equals(player.getPiece()) ? WIN : LOSS;
+    }
+
+    public static TictactoeEvaluationFunction create(Player player) {
+        return new TictactoeEvaluationFunction(player);
     }
 }
